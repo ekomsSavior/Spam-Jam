@@ -5,7 +5,7 @@ import random
 import subprocess
 from bluepy.btle import Scanner, Peripheral, DefaultDelegate, ADDR_TYPE_RANDOM, ADDR_TYPE_PUBLIC, BTLEException
 
-# 🎨 Spam Jam & Party Pooper Banner
+# 🎨 Spam Jam 
 def print_banner():
     print(r"""
 ███████╗██████╗  █████╗ ███╗   ███╗         ██╗ █████╗ ███╗   ███╗
@@ -55,7 +55,7 @@ def spam_ble():
             print(f"⚠️ Error: {e}")
             break
 
-# 🎯 BLE Jamming (NOW FULLY FIXED!)
+# 🎯 BLE Jamming 
 def jam_ble():
     print("🔎 Resetting BLE scan before jamming...")
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
