@@ -156,6 +156,32 @@ def rfcomm_flood():
     print("✅ RFCOMM flood completed!")
 
 # 🏁 Main Function: Choose Feature
-if __name__ == "__main__":
+def main():
     print_banner()
+    print("🔹 1️⃣ Spam a BLE device 💌")
+    print("🔹 2️⃣ Jam a BLE device 🚫")
+    print("🔹 3️⃣ Scan for Bluetooth devices 📡")
+    print("🔹 4️⃣ L2Ping Attack 💥 (Now customizable!)")
+    print("🔹 5️⃣ RFCOMM Connection Flood 💥")
+    print("🔹 6️⃣ Start Bluetooth Service 📡")
+    print("🔹 7️⃣ Quit 🚪")
+    choice = input("💜 Choose an option (1-7): ")
+    if choice == "1":
+        target_mac = input("💜 Enter target BLE MAC address: ")
+        spam_ble(target_mac)
+    elif choice == "2":
+        jam_ble()
+    elif choice == "3":
+        scan_bluetooth()
+    elif choice == "4":
+        l2ping_attack()
+    elif choice == "5":
+        rfcomm_flood()
+    elif choice == "6":
+        start_bluetooth()
+    elif choice == "7":
+        print("👋 Goodbye, fren! XOXOXO 💜")
+        sys.exit()
+
+if __name__ == "__main__":
     main()
