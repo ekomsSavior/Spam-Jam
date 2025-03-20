@@ -16,7 +16,7 @@ Built for research, security testing, and ethical hacking! 🚀💜
 Step 1: Clone the Repository
 Open a terminal and run:
 
-git clone https://github.com/YOUR-GITHUB/spam-jam.git
+git clone https://github.com/ekomsSavior/Spam-Jam.git
 
 cd spam-jam
 
