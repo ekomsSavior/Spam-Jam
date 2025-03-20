@@ -14,9 +14,9 @@ def print_banner():
 ╚════██║██╔═══╝ ██╔══██║██║╚██╔╝██║    ██   ██║██╔══██║██║╚██╔╝██║
 ███████║██║     ██║  ██║██║ ╚═╝ ██║    ╚█████╔╝██║  ██║██║ ╚═╝ ██║
 ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝     ╚════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ 
-   ❤️💜 Spam Jam BLE Edition 💜❤️
+   ❤️💜 A WORLD OF BLE FUN 💜❤️
    👩‍💻 Author: ekoms savior
-   🎯 Now with Party Pooper + Custom Attacks! 🎉
+   🎯 Now with MORE Custom Attacks! 🎉
    """)
     print("💜 XOXO HACK THE PLANET! 💜\n")
 
