@@ -55,7 +55,7 @@ def spam_ble():
             print(f"⚠️ Error: {e}")
             break
 
-# 🎯 BLE Jamming (FULLY FIXED!)
+# 🎯 BLE Jamming (NOW FULLY FIXED!)
 def jam_ble():
     print("🔎 Resetting BLE scan before jamming...")
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -74,12 +74,13 @@ def jam_ble():
             print("⚠️ No BLE devices found. Try again!")
             continue
 
-        for idx, device in enumerate(devices):
+        device_list = list(devices)  # Convert dict_values to a list for indexing!
+        for idx, device in enumerate(device_list):
             print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
 
         try:
             device_idx = int(input("💜 Enter the index of the device to jam: "))
-            target_device = devices[device_idx].addr
+            target_device = device_list[device_idx].addr
         except (ValueError, IndexError):
             print("⚠️ Invalid index.")
             continue
