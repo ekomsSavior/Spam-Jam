@@ -26,7 +26,7 @@ Open a terminal and run:
 
 git clone https://github.com/ekomsSavior/Spam-Jam.git
 
-cd spam-jam
+cd Spam-Jam
 
 Step 2: Install Dependencies
 
