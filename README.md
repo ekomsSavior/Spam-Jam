@@ -34,7 +34,7 @@ Before running Spam Jam, install required Bluetooth libraries:
 
 sudo apt update && sudo apt install -y bluez bluez-tools python3-pip
 
-pip3 install bluepy
+sudo apt install python3-bluepy
 
 Step 3: Run Spam Jam
 
