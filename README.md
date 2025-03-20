@@ -64,61 +64,61 @@ When you run the tool, you’ll see this menu:
 
 1️⃣ BLE Spam Attack (Send Custom Messages)
 
-1️⃣ Select option 1
+- Select option 1
 
-2️⃣ Enter the target BLE MAC address
+- Enter the target BLE MAC address
 
-3️⃣ Type a custom spam message
+- Type a custom spam message
 
-4️⃣ Press Enter to start spamming! 💥
+- Press Enter to start spamming! 💥
 
 2️⃣ BLE Jamming (Flood a BLE Device)
 
-1️⃣ Select option 2
+- Select option 2
 
-2️⃣ Enter the target BLE MAC address
+- Enter the target BLE MAC address
 
-3️⃣ The tool will continuously send junk data to the device
+- The tool will continuously send junk data to the device
 
 3️⃣ Scan for Bluetooth Devices
 
-1️⃣ Select option 3
+- Select option 3
 
-2️⃣ The tool will scan for all nearby Bluetooth devices
+- The tool will scan for all nearby Bluetooth devices
 
-3️⃣ View MAC addresses & signal strength
+- View MAC addresses & signal strength
 
 4️⃣ L2Ping Attack (Bluetooth Ping Flood)
 
-1️⃣ Select option 4
+- Select option 4
 
-2️⃣ Enter the target device’s MAC address
+- Enter the target device’s MAC address
 
-3️⃣ Enter packet size (default 600, max 672)
+- Enter packet size (default 600, max 672)
 
-4️⃣ Enable Flood Mode for continuous attack
+- Enable Flood Mode for continuous attack
 
-5️⃣ Watch as Spam Jam floods the device with Bluetooth pings! 💥
+- Watch as Spam Jam floods the device with Bluetooth pings! 💥
 
 5️⃣ RFCOMM Connection Flood
 
-1️⃣ Select option 5
+- Select option 5
 
-2️⃣ Enter the target Bluetooth MAC address
+- Enter the target Bluetooth MAC address
 
-3️⃣ Spam Jam will attempt 1000+ RFCOMM connections
+- Spam Jam will attempt 1000+ RFCOMM connections
 
-4️⃣ May cause disconnections, slowdowns, or crashes! 💥
+- May cause disconnections, slowdowns, or crashes! 💥
 
 6️⃣ Start Bluetooth Service
 
-1️⃣ Select option 6
+- Select option 6
 
-2️⃣ If Bluetooth isn’t running, this will start the service
+ -If Bluetooth isn’t running, this will start the service
 
 7️⃣ Quit Spam Jam
 
-1️⃣ Select option 7 to exit
+- Select option 7 to exit
 
 
 ⚠️ Legal Disclaimer
