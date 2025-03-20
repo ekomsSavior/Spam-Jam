@@ -92,12 +92,13 @@ def jam_ble():
     except BTLEException as e:
         print(f"⚠️ Failed to jam {target_device}: {e}")
 
-# 🔎 Bluetooth Device Scanner (Fixed!)
+# 🔎 Bluetooth Device Scanner (Fully Fixed!)
 def scan_bluetooth():
     print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
-    
+
     try:
         scanner = Scanner()
+        scanner.clear()  # 💥 FIX: Clears any previous scan before starting a new one
         devices = scanner.scan(10.0)
 
         if not devices:
@@ -107,7 +108,7 @@ def scan_bluetooth():
             for idx, device in enumerate(devices):
                 print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
 
-    except Exception as e:
+    except BTLEException as e:
         print(f"⚠️ Error running Bluetooth scan: {e}")
 
     print("\n✅ Scan complete!\n")
