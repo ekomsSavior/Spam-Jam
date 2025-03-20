@@ -16,7 +16,7 @@ def print_banner():
    👩‍💻 Author: ekoms savior
    🎯 Fun & Cyber Mayhem 🤖💥
    """)
-    print("💜 XOXO Let's spam and jam! 💜\n")
+    print("💜 XOXO HACK THE PLANET! 💜\n")
 
 # 🎯 BLE Spamming Class
 class BLESpam(DefaultDelegate):
