@@ -31,7 +31,7 @@ class BLESpam(DefaultDelegate):
 # 🚀 BLE Spamming with User Input!
 def spam_ble(target_mac):
     print(f"🚀 Spamming device {target_mac} 💥💜")
-    custom_message = input("💜 Enter your custom spam message: ").encode()  # User input!
+    custom_message = input("💜 Enter your custom spam message: ").encode()  
 
     try:
         peripheral = Peripheral(target_mac, ADDR_TYPE_RANDOM)
@@ -88,11 +88,9 @@ def scan_bluetooth():
     print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
 
     try:
-        # Start scanning
         subprocess.run(["bluetoothctl", "scan", "on"], check=True)
-        time.sleep(10)  # Allow scan time
+        time.sleep(10)  
 
-        # Get list of devices
         result = subprocess.run(["bluetoothctl", "devices"], capture_output=True, text=True)
         devices = result.stdout.strip().split("\n")
 
