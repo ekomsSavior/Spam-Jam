@@ -172,7 +172,7 @@ def rfcomm_flood():
 
     print("✅ RFCOMM flood completed!")
 
-# 🏁 Main Function
+# ✅ Properly Call `main()`
 if __name__ == "__main__":
     print_banner()
     main()
