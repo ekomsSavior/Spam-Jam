@@ -55,17 +55,19 @@ def spam_ble():
             print(f"⚠️ Error: {e}")
             break
 
-# 🎯 BLE Jamming Function (Handles Scan Errors!)
+# 🎯 BLE Jamming Function (FULLY FIXED SCAN!)
 def jam_ble():
+    print("🔎 Resetting BLE scan before jamming...")
+    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  # 💥 Reset before scan!
+    
     print("🔎 Scanning for BLE devices to jam 📡")
     scanner = Scanner()
     
     try:
         devices = scanner.scan(10.0)
     except BTLEException as e:
-        print(f"⚠️ BLE Scan Failed! Retrying... Error: {e}")
-        time.sleep(2)
-        return jam_ble()
+        print(f"⚠️ BLE Scan Failed! Error: {e}")
+        return
 
     if not devices:
         print("⚠️ No BLE devices found. Try again!")
@@ -94,6 +96,9 @@ def jam_ble():
 
 # 🔎 Bluetooth Device Scanner (FULLY FIXED!)
 def scan_bluetooth():
+    print("🔎 Resetting BLE scan before scanning for devices...")
+    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)  # 💥 Reset before scan!
+    
     print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
 
     try:
