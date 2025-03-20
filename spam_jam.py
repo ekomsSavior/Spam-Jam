@@ -55,7 +55,7 @@ def spam_ble():
             print(f"⚠️ Error: {e}")
             break
 
-# 🎯 BLE Jamming Function (Now Handles Scan Errors!)
+# 🎯 BLE Jamming Function (Handles Scan Errors!)
 def jam_ble():
     print("🔎 Scanning for BLE devices to jam 📡")
     scanner = Scanner()
@@ -92,13 +92,12 @@ def jam_ble():
     except BTLEException as e:
         print(f"⚠️ Failed to jam {target_device}: {e}")
 
-# 🔎 Bluetooth Device Scanner (Fully Fixed!)
+# 🔎 Bluetooth Device Scanner (FULLY FIXED!)
 def scan_bluetooth():
     print("🔎 Scanning for Bluetooth devices... (This may take a few seconds)\n")
 
     try:
         scanner = Scanner()
-        scanner.clear()  # 💥 FIX: Clears any previous scan before starting a new one
         devices = scanner.scan(10.0)
 
         if not devices:
