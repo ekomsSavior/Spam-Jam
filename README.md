@@ -42,6 +42,10 @@ sudo python3 spam_jam.py
 
 🚨 Root is required for Bluetooth attacks! Always use sudo!
 
+To UPDATE Spam Jam (run this while in the Spam Jam directory on your machine):
+
+git pull
+
 🎯 How to Use Spam Jam
 
 When you run the tool, you’ll see this menu:
