@@ -1,20 +1,20 @@
-# Spam-Jam
-📜 Spam Jam — The Ultimate BLE & Bluetooth Attack Toolkit
+# Spam-Jam  
+📜 **Spam Jam — The Ultimate BLE & Bluetooth Attack Toolkit**  
 
-Author: ekoms savior 💜
+**Author: ekoms savior 💜**  
 
-🔥 Spam Jam is a powerful open-source Bluetooth attack toolkit designed for security researchers & ethical hackers.
-It features:
+🔥 Spam Jam is a powerful open-source Bluetooth attack toolkit designed for security researchers & ethical hackers.  
 
-✅ BLE Spamming 💌 (Send custom BLE spam messages)
-
-✅ BLE Jamming 🚫 (Overload BLE devices with junk packets)
-
-✅ L2Ping Attacks 💥 (Customizable Bluetooth ping flood)
-
-✅ RFCOMM Connection Flood 🔥 (Spam Bluetooth connections)
-
-✅ Full Bluetooth Device Scanning 📡
+It features:  
+✅ BLE Spamming 💌 (Send custom BLE spam messages)  
+✅ BLE Jamming 🚫 (Overload BLE devices with junk packets)  
+✅ L2Ping Attacks 💥 (Customizable Bluetooth ping flood)  
+✅ RFCOMM Connection Flood 🔥 (Spam Bluetooth connections)  
+✅ Full Bluetooth Device Scanning 📡  
+✅ Spam All BLE Devices 💌💥 (Send to *all* devices in range!)  
+✅ Jam All BLE Devices 🚫💥 (Jam *every* discovered device!)  
+✅ NEW! Auto Re-Scan + Re-Jam Loop 🔁 (Continuously detect and jam new devices)  
+✅ RSSI Filtering for Smarter Targeting 🧠 (Jam only strong signals!)
 
 Built for research, security testing, and ethical hacking! 🚀💜
 
