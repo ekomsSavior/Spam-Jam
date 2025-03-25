@@ -14,7 +14,9 @@ It features:
 ✅ NEW!! Spam All BLE Devices 💌💥 (Send to *all* devices in range!)  
 ✅ NEW!! Jam All BLE Devices 🚫💥 (Jam *every* discovered device!)  
 ✅ NEW!! Auto Re-Scan + Re-Jam Loop 🔁 (Continuously detect and jam new devices)  
-✅ NEW!! RSSI Filtering for Smarter Targeting 🧠 (Jam only strong signals!)
+✅ NEW!! Real Time RSSI Filtering for Smarter Targeting 🧠 (Jam only strong signals!)
+✅ NEW!! Introduced Classic Bluetooth discovery via hcitool scan
+✅ NEW!! Increased BLE scan duration from 10s to 15s for improved detection
 
 Built for research, security testing, and ethical hacking! 🚀💜
 
