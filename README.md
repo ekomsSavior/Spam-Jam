@@ -11,10 +11,10 @@ It features:
 ✅ L2Ping Attacks 💥 (Customizable Bluetooth ping flood)  
 ✅ RFCOMM Connection Flood 🔥 (Spam Bluetooth connections)  
 ✅ Full Bluetooth Device Scanning 📡  
-✅ Spam All BLE Devices 💌💥 (Send to *all* devices in range!)  
-✅ Jam All BLE Devices 🚫💥 (Jam *every* discovered device!)  
-✅ NEW! Auto Re-Scan + Re-Jam Loop 🔁 (Continuously detect and jam new devices)  
-✅ RSSI Filtering for Smarter Targeting 🧠 (Jam only strong signals!)
+✅ NEW!! Spam All BLE Devices 💌💥 (Send to *all* devices in range!)  
+✅ NEW!! Jam All BLE Devices 🚫💥 (Jam *every* discovered device!)  
+✅ NEW!! Auto Re-Scan + Re-Jam Loop 🔁 (Continuously detect and jam new devices)  
+✅ NEW!! RSSI Filtering for Smarter Targeting 🧠 (Jam only strong signals!)
 
 Built for research, security testing, and ethical hacking! 🚀💜
 
