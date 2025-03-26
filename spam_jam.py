@@ -84,6 +84,7 @@ def classic_jam():
             print(f"⚠️ Attempt {i+1}: Failed to connect to {target_mac}")
 
 # 💥 L2Ping Flood
+# 💥 L2Ping Flood
 def l2ping_attack():
     devices = interactive_ble_scan()
     if not devices:
@@ -105,6 +106,7 @@ def l2ping_attack():
         print("✅ L2Ping attack successful!")
     except subprocess.CalledProcessError:
         print(f"⚠️ Failed. Device may be offline.")
+
 
 # ✅ RFCOMM Flood
 def rfcomm_flood():
