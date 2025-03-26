@@ -16,7 +16,7 @@ def print_banner():
 ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝     ╚════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ 
    ❤️💜 A WORLD OF BLE FUN 💜❤️
    👩‍💻 Author: ekoms savior
-   🎯 Now with MORE Custom Attacks! 🎉
+   🎯 Now with re-scan and re-jam loop!!! 🎉
    """)
     print("💜 XOXO HACK THE PLANET! 💜\n")
 
@@ -295,24 +295,25 @@ def start_bluetooth():
 def main():
     print_banner()
     while True:
-        print("\n🔹 1️⃣ Spam a BLE device 💌")
-        print("🔹 2️⃣ Jam a BLE device 🚫")
-        print("🔹 3️⃣ Scan for Bluetooth devices 📡")
-        print("🔹 4️⃣ L2Ping Attack 💥")
-        print("🔹 5️⃣ RFCOMM Flood 💥")
-        print("🔹 6️⃣ Start Bluetooth Service 📡")
-        print("🔹 7️⃣ Quit 🚪")
-        print("🔹 8️⃣ Spam All BLE Devices 💌💥")
-        print("🔹 9️⃣ Jam All BLE Devices 🚫💥")
-        print("🔹 🔟 Classic RFCOMM Jam 💣")
+        print("\n🔹 1️⃣ Start Bluetooth Service 📡")
+        print("🔹 2️⃣ Scan for Bluetooth devices 📡")
+        print("🔹 3️⃣ Spam a BLE device 💌")
+        print("🔹 4️⃣ Spam All BLE Devices 💌💥")
+        print("🔹 5️⃣ Jam a BLE device 🚫")
+        print("🔹 6️⃣ Jam All BLE Devices 🚫💥")
+        print("🔹 7️⃣ L2Ping Attack 💥")
+        print("🔹 8️⃣ RFCOMM Flood 💥")
+        print("🔹 9️⃣ Classic RFCOMM Jam 💣")
+        print("🔹 🔟 Quit 🚪")
 
         choice = input("💜 Choose an option (1-10): ")
-        functions = [spam_ble, jam_ble, scan_bluetooth, l2ping_attack, rfcomm_flood, start_bluetooth, None, spam_all_ble, jam_all_ble, classic_jam]
+        functions = [
+            start_bluetooth, scan_bluetooth, spam_ble, spam_all_ble,
+            jam_ble, jam_all_ble, l2ping_attack, rfcomm_flood,
+            classic_jam, sys.exit
+        ]
 
-        if choice == "7":
-            print("👋 Goodbye, fren! XOXOXO 💜")
-            sys.exit()
-        elif choice in map(str, range(1, 11)):
+        if choice in map(str, range(1, 11)):
             func = functions[int(choice)-1]
             if func:
                 func()
