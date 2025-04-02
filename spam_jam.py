@@ -27,13 +27,13 @@ class BLESpam(DefaultDelegate):
     def handleNotification(self, cHandle, data):
         print(f"🔔 Notification from BLE device: {data}")
 
-# 💌 Flipper-Style BLE Advertise All
+# 💌 BLE Advertise All
 def flipper_ble_advertise_all():
-    print("💜 Launching BLE Advertise All — Flipper Style 💣📡")
+    print("💜 Launching BLE Advertise All  💣📡")
     names = [
-        "SpamJam_XOXO", "💜HAXX💜", "BLE_Boop", "👾GOTCHA", 
+        "SpamJam_XOXO", "💜HAXX💜", "BLE_Boop", "👾x0x0x", 
         "Free_Wifi_LOL", "Not_A_Trap", "💣 BT_Bomb", "UFO-SIGNAL", 
-        "🍭CandyBLE", "💀NSA_Van", "HackThePlanet", "💜ekoms💜"
+        "🍭CandyBLE", "💀NSA_Van", "HackThePlanet", "💜ekomsSavior💜"
     ]
     try:
         subprocess.run(["bluetoothctl", "power", "on"], stdout=subprocess.DEVNULL)
