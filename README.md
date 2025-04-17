@@ -21,23 +21,27 @@ It features:
 
 ✅ Full Bluetooth Device Scanning 📡
 
-💥 NEW BLE MESH NETWORK!
+NEW BLE MESH BOTNET SYSTEM
 
-✅ Mesh Botnet Mode (SpamJamMesh_🌐)
+✅ Mesh Botnet Mode – Broadcast commands across BLE bots
 
-✅ Beacon Mode 📡 (Turn any device into a broadcast node)
+✅ Beacon Mode – Turn any device into a mesh node
 
-✅ Command Propagation (Spam, Jam, Scan, Chain)
+✅ Real-Time Scanning + Bot Discovery
 
-✅ Real-Time Bot Discovery & Persistence (Saved to mesh_nodes.txt)
+✅ Persistent mesh_nodes.txt file (MAC, Name, RSSI, Timestamp)
 
-✅ Advanced Scan Filters (Name, RSSI, Ask, etc)
+✅ Optional Recursive Chaining – Bots rebroadcast messages
 
-✅ Optional Recursive Chain Messaging
+✅ Command Parsing: spam_mode, jam, scan, chain, etc.
 
-✅ 🌍 Range Extension via Mesh Collaboration
+✅ Self-Growing – Bots scan for and save new bots
 
-✅ Fully integrated into Spam Jam — no extra setup!
+✅ Continuous Broadcast Loop Mode
+
+✅ Extend range using chained bots over time
+
+✅ Full mesh registry stored for easy editing
 
 🛠️ Installation (Kali Linux)
 
@@ -62,6 +66,7 @@ sudo python3 spamjam.py
 To update Spam Jam at any time:
 
 git pull
+
 
 🎯 Menu (Current Version)
 
@@ -111,7 +116,7 @@ mesh menu options
 
 🔹 5. Quit
 
-✅ Scanning gives you full control — filter by name, RSSI, and more.
+✅ Scanning gives you full control — filter by name, RSSI, Scan in sequence and more.
 
 ✅ Saved bots are written to mesh_nodes.txt with MAC, name, RSSI, and timestamp.
 
