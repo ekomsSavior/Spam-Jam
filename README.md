@@ -148,6 +148,33 @@ Attach physical GPS or CSI logging to beacon nodes for BLE signal analysis
 
 Write your own mesh command payloads (future extensibility coming!)
 
+EXTRA SPAM-JAM FEATURES: 📄 mesh_bot_listener.py
+
+This script turns your BLE device into an active mesh bot listener.
+
+Setup Instructions:
+
+1. Open the file in a text editor.
+
+2. Replace the `TARGET_MAC` value with the MAC address of the device you want to connect to.
+
+3. Run the script with:
+
+   sudo python3 mesh_bot_listener.py
+
+What it does:
+
+✅ Listens for incoming BLE mesh commands like `scan`, `scan_jam`, or `scan_spam`
+
+✅ Executes them in real time
+
+✅ Can be run on Raspberry Pis, laptops, or other BLE-capable gear
+
+This tool is optional, but helpful if you're building a physical mesh of devices and want each node to act automatically on received commands.
+
+!!Make sure the MAC is part of your mesh_nodes.txt file!!
+
+
 ⚠️ Legal Disclaimer
 
 Spam Jam is for educational and research use only.
