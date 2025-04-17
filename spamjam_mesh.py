@@ -143,7 +143,7 @@ def broadcast_command():
             print("⚠️ Invalid selection.")
             return
 
-    message = input("💬 Enter mesh command (scan_spam / scan_jam): ").strip()
+    message = input("💬 Enter mesh command (scan_spam / scan_jam / scan): ").strip()
     chain = input("🔁 Chain this command to other bots? (y/N): ").strip().lower() == "y"
 
     try:
@@ -159,7 +159,32 @@ def broadcast_command():
                     peripheral.disconnect()
                 except Exception as e:
                     print(f"⚠️ Failed to send to {target}: {e}")
-            scan_and_add()  # Continuous auto-growth
+
+            # Local scan support if message is 'scan'
+            if message == "scan":
+                print("🔍 Performing local scan as part of broadcast loop...")
+                scanner = Scanner()
+                try:
+                    devices = scanner.scan(10.0)
+                    new_count = 0
+                    for dev in devices:
+                        mac = dev.addr
+                        name = dev.getValueText(9) or "Unnamed"
+                        rssi = dev.rssi
+                        if mac not in mesh_nodes:
+                            mesh_nodes[mac] = {
+                                "name": name,
+                                "rssi": rssi,
+                                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                            }
+                            print(f"✨ Found new bot: {mac} ({name}, RSSI={rssi})")
+                            new_count += 1
+                    if new_count > 0:
+                        save_mesh_nodes()
+                except Exception as e:
+                    print(f"⚠️ Scan error: {e}")
+
+            scan_and_add()  # Keep growing the mesh
             print("🌀 Waiting 10s to protect bots...")
             time.sleep(10)
     except KeyboardInterrupt:
