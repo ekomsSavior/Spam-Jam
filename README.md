@@ -1,49 +1,48 @@
 Spam-Jam
 
-📜 Spam Jam — The Ultimate BLE & Bluetooth Attack Toolkit
+ Spam Jam — The Ultimate BLE & Bluetooth Attack Toolkit
 
-Author: ekoms savior 💜
-🌐 Now featuring a BLE Mesh Botnet 🤖✨
+Author: ekoms savior 
+ Now featuring a BLE Mesh Botnet 
 
 ![image4](https://github.com/user-attachments/assets/bb71fb71-3259-4a0e-80a2-15df607eaaca)
 
-🔥 Spam Jam is a powerful, open-source Bluetooth attack toolkit for security researchers & ethical hackers.
+ Spam Jam is a powerful, open-source Bluetooth attack toolkit 
 
 It features:
 
-✅ BLE Spamming 💌 (Send custom BLE spam messages)
+ BLE Spamming  (Send custom BLE spam messages)
 
-✅ BLE Jamming 🚫 (Overload BLE devices with junk packets)
+ BLE Jamming 🚫 (Overload BLE devices with junk packets)
 
-✅ L2Ping Attacks 💥 (Bluetooth ping flood)
+ L2Ping Attacks  (Bluetooth ping flood)
 
-✅ RFCOMM Flood 🔥 (Spam Bluetooth connections)
+ RFCOMM Flood  (Spam Bluetooth connections)
 
-✅ Full Bluetooth Device Scanning 📡
+Full Bluetooth Device Scanning 
 
 NEW BLE MESH BOTNET SYSTEM
 
-✅ Mesh Botnet Mode – Broadcast commands across BLE bots
+ Mesh Botnet Mode – Broadcast commands across BLE bots
 
-✅ Beacon Mode – Turn any device into a mesh node
+ Beacon Mode – Turn any device into a mesh node
 
-✅ Real-Time Scanning + Bot Discovery
+ Real-Time Scanning + Bot Discovery
 
-✅ Persistent mesh_nodes.txt file (MAC, Name, RSSI, Timestamp)
+Persistent mesh_nodes.txt file (MAC, Name, RSSI, Timestamp)
 
-✅ Optional Recursive Chaining – Bots rebroadcast messages
+ Optional Recursive Chaining – Bots rebroadcast messages
+Command Parsing: spam_mode, jam, scan, chain, etc.
 
-✅ Command Parsing: spam_mode, jam, scan, chain, etc.
+ Self-Growing – Bots scan for and save new bots
 
-✅ Self-Growing – Bots scan for and save new bots
+ Continuous Broadcast Loop Mode
 
-✅ Continuous Broadcast Loop Mode
+ Extend range using chained bots over time
 
-✅ Extend range using chained bots over time
+ Full mesh registry stored for easy editing
 
-✅ Full mesh registry stored for easy editing
-
-🛠️ Installation (Kali Linux)
+ Installation (Kali Linux)
 
 Step 1: Clone the Repository
 
@@ -59,40 +58,40 @@ sudo apt install python3-bluepy
 
 Step 3: Run Spam Jam
 
-sudo python3 spamjam.py
+sudo python3 spam_jam.py
 
-🚨 Root is required for Bluetooth attacks! Always use sudo.
+ Root is required for Bluetooth attacks! Always use sudo.
 
 To update Spam Jam at any time:
 
 git pull
 
 
-🎯 Menu (Current Version)
+ Menu (Current Version)
 
-🔹 0 BLE Advertise All 💣
+🔹 0 BLE Advertise All 
 
-🔹 1 Start Bluetooth Service 📡
+🔹 1 Start Bluetooth Service 
 
-🔹 2 Scan for Bluetooth devices 📡
+🔹 2 Scan for Bluetooth devices 
 
-🔹 3 Spam a BLE device 💌
+🔹 3 Spam a BLE device 
 
-🔹 4 Spam All BLE Devices 💌💥
+🔹 4 Spam All BLE Devices 
 
-🔹 5 Jam a BLE device 🚫
+🔹 5 Jam a BLE device 
 
-🔹 6 Jam All BLE Devices 🚫💥
+🔹 6 Jam All BLE Devices 
 
-🔹 7 Mesh Network Menu 🌐
+🔹 7 Mesh Network Menu 
 
-🔹 8 L2Ping Attack 💥
+🔹 8 L2Ping Attack 
 
-🔹 9 RFCOMM Flood 💥
+🔹 9 RFCOMM Flood 
 
-🔹 10 Quit 🚪
+🔹 10 Quit 
 
-🧠 Mesh Network Menu (🌐 Option 7)
+ Mesh Network Menu ( Option 7)
 
 The BLE Mesh Botnet is Spam Jam's secret weapon.
 
@@ -116,13 +115,13 @@ mesh menu options
 
 🔹 5. Quit
 
-✅ Scanning gives you full control — filter by name, RSSI, Scan in sequence and more.
+ Scanning gives you full control — filter by name, RSSI, Scan in sequence and more.
 
-✅ Saved bots are written to mesh_nodes.txt with MAC, name, RSSI, and timestamp.
+ Saved bots are written to mesh_nodes.txt with MAC, name, RSSI, and timestamp.
 
-✅ Commands sent to bots are delivered via BLE write and executed based on the message.
+ Commands sent to bots are delivered via BLE write and executed based on the message.
 
-💡 Command Examples for Mesh Bots
+ Command Examples for Mesh Bots
 
 After selecting a bot or "all", enter a command
 
@@ -134,9 +133,9 @@ scan → Scans for more nearby bots to grow the mesh
 
 chain → Repeats this command to other bots it discovers 
 
-📡 This allows mass coordination of BLE attacks with no central C2. Each bot becomes a repeater!
+ This allows mass coordination of BLE attacks with no central C2. Each bot becomes a repeater!
 
-🧪 Experiment Ideas for Advanced Users
+ Experiment Ideas for Advanced Users
 
 Turn your entire lab into a BLE botnet swarm using old phones, Raspberry Pis, or dongles
 
@@ -148,7 +147,7 @@ Attach physical GPS or CSI logging to beacon nodes for BLE signal analysis
 
 Write your own mesh command payloads (future extensibility coming!)
 
-EXTRA SPAM-JAM FEATURES: 📄 mesh_bot_listener.py
+EXTRA SPAM-JAM FEATURES:  mesh_bot_listener.py
 
 This script turns your BLE device into an active mesh bot listener.
 
@@ -164,26 +163,22 @@ Setup Instructions:
 
 What it does:
 
-✅ Listens for incoming BLE mesh commands like `scan`, `scan_jam`, or `scan_spam`
+ Listens for incoming BLE mesh commands like `scan`, `scan_jam`, or `scan_spam`
 
-✅ Executes them in real time
+ Executes them in real time
 
-✅ Can be run on Raspberry Pis, laptops, or other BLE-capable gear
+ Can be run on Raspberry Pis, laptops, or other BLE-capable gear
 
 This tool is optional, but helpful if you're building a physical mesh of devices and want each node to act automatically on received commands.
 
 !!Make sure the MAC is part of your mesh_nodes.txt file!!
 
 
-⚠️ Legal Disclaimer
+ Legal Disclaimer
 
 Spam Jam is for educational and research use only.
 
 Unauthorized use on networks or devices you do not own is illegal.
-
-Be ethical. Be responsible. Hack the planet with heart. 💜
-
-💜 Contribute & Collaborate
 
 Pull requests welcome!
 
@@ -192,9 +187,3 @@ Build with me at: https://github.com/ekomsSavior
 FOllOW me on IG: https://instagram.com/ekoms.is.my.savior
 
 Read my articles over at MEDIUM: https://medium.com/@ekoms1
-
-💣 LET’S SPAM & JAM 💥
-
-🌀 AND MESH THE PLANET 🌐
-
-by ekoms savior 💜 xoxoxo
