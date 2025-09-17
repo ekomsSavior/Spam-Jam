@@ -13,7 +13,7 @@ It features:
 
  BLE Spamming  (Send custom BLE spam messages)
 
- BLE Jamming 🚫 (Overload BLE devices with junk packets)
+ BLE Jamming  (Overload BLE devices with junk packets)
 
  L2Ping Attacks  (Bluetooth ping flood)
 
