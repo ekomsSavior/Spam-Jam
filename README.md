@@ -1,13 +1,13 @@
-Spam-Jam
+# Spam-Jam
 
- Spam Jam — The Ultimate BLE & Bluetooth Attack Toolkit
+## Spam Jam — The Ultimate BLE & Bluetooth Attack Toolkit
 
 Author: ekoms savior 
  Now featuring a BLE Mesh Botnet 
 
 ![image4](https://github.com/user-attachments/assets/bb71fb71-3259-4a0e-80a2-15df607eaaca)
 
- Spam Jam is a powerful, open-source Bluetooth attack toolkit 
+## Spam Jam is a powerful, open-source Bluetooth attack toolkit 
 
 It features:
 
@@ -42,30 +42,31 @@ Command Parsing: spam_mode, jam, scan, chain, etc.
 
  Full mesh registry stored for easy editing
 
- Installation (Kali Linux)
+## Installation (Kali Linux)
 
 Step 1: Clone the Repository
-
+```bash
 git clone https://github.com/ekomsSavior/Spam-Jam.git
 
 cd Spam-Jam
-
+```
 Step 2: Install Dependencies
-
+```bash
 sudo apt update && sudo apt install -y bluez bluez-tools python3-pip
 
 sudo apt install python3-bluepy
-
+```
 Step 3: Run Spam Jam
-
+```bash
 sudo python3 spam_jam.py
-
+```
  Root is required for Bluetooth attacks! Always use sudo.
 
 To update Spam Jam at any time:
-
+from SPam Jam directory run
+```bash
 git pull
-
+```
 
  Menu (Current Version)
 
@@ -180,7 +181,7 @@ Spam Jam is for educational and research use only.
 
 Unauthorized use on networks or devices you do not own is illegal.
 
-Pull requests welcome!
+
 
 Build with me at: https://github.com/ekomsSavior
 
