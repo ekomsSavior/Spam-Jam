@@ -39,7 +39,7 @@ def flipper_ble_advertise_all():
         while True:
             for name in names:
                 subprocess.run(["bluetoothctl", "system-alias", name], stdout=subprocess.DEVNULL)
-                print(f"📡 Broadcasting: {name}")
+                print(f" Broadcasting: {name}")
                 time.sleep(1.2)
 
     except KeyboardInterrupt:
@@ -159,7 +159,7 @@ def jam_all_ble():
 
 #  Start Bluetooth
 def start_bluetooth():
-    print("📡 Starting Bluetooth...")
+    print(" Starting Bluetooth...")
     subprocess.run(['sudo', 'service', 'bluetooth', 'start'], check=True)
 #  L2Ping
 def l2ping_attack():
@@ -167,7 +167,7 @@ def l2ping_attack():
     if not devices:
         return
     try:
-        idx = int(input("💜 Enter index of device to L2Ping: "))
+        idx = int(input(" Enter index of device to L2Ping: "))
         addr = devices[idx].addr
     except (ValueError, IndexError):
         print(" Invalid selection.")
